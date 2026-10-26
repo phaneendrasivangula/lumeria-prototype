@@ -1,5 +1,5 @@
-import { Card } from "./ui";
-import s from "./report.module.css";
+import { Card, ui } from "./ui";
+import s from "./FirstScan.module.css";
 
 /** One scan is a starting point, not a trend: say so, and show what more scans unlock. */
 export function FirstScan({ name, area }: { name: string; area: string }) {
@@ -11,7 +11,7 @@ export function FirstScan({ name, area }: { name: string; area: string }) {
   ];
   return (
     <Card as="article">
-      <h3 className={s.todayHead} style={{ marginTop: 0 }}>
+      <h3 className={ui.cardTitle} data-flush>
         What unlocks next, {name}
       </h3>
       <ol className={s.steps}>

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { SkinReport } from "@/lib/types";
-import { buildStory } from "@/lib/insights";
+import { buildStory } from "@/lib/story";
 import { fmtDay } from "@/lib/format";
 import { useReport } from "@/lib/useReport";
 import { Areas } from "./Areas";
@@ -16,8 +16,8 @@ import { ScanStrip } from "./ScanStrip";
 import { Timeline } from "./Timeline";
 import { TodayCard } from "./TodayCard";
 import { ErrorState, LoadingState, NotFoundState } from "./states";
-import { Icon, Section } from "./ui";
-import s from "./report.module.css";
+import { Icon, Section, ui } from "./ui";
+import s from "./ReportScreen.module.css";
 
 export function ReportScreen({ id, fail }: { id: string; fail: boolean }) {
   const { state, retry } = useReport(id, fail);
@@ -55,7 +55,7 @@ function Report({ report }: { report: SkinReport }) {
 
       <div className={s.story}>
         <h2 className={s.headline}>{story.headline}</h2>
-        <p className={s.subhead}>{story.subhead}</p>
+        <p className={ui.body}>{story.subhead}</p>
       </div>
 
       <Section title={first ? "Your first scan" : "Your latest scan"} id="today">
@@ -96,7 +96,7 @@ function Report({ report }: { report: SkinReport }) {
         <ScanStrip scans={story.scans} areas={story.areas} onOpen={(p) => open(p.scan.id)} />
       </Section>
 
-      <p className={s.footnote}>
+      <p className={ui.footnote}>
         <Icon name="info" size={16} />
         <span>
           Built from {story.scans.length === 1 ? "your first scan" : `your ${story.scans.length} scans`}

@@ -1,4 +1,67 @@
-# Lumeria take-home: The Skin Report
+# The Skin Report: Phaneendra's submission
+
+**Live:** https://lumeria-prototype.vercel.app (open on a phone). Start at `/report/noor`, then
+`/report/maya`, `/report/jordan`, `/report/sam`, and `/report/noor?fail=1` for the error state.
+The full interactive design (Lumi chat, scan flow, streaks) is at `/prototype/`.
+Write-up: [`SUBMISSION.md`](SUBMISSION.md).
+
+## Code tour
+
+```
+app/
+  page.tsx                  People index (Noor, Maya, Jordan, Sam) + link to the prototype
+  report/[id]/page.tsx      Server route: reads id and ?fail, renders <ReportScreen>
+  api/**                    Untouched mock API
+  globals.css               Design tokens: colour, type, radii, glass, bands, motion
+lib/
+  useReport.ts              Client fetch: loading | ready | not-found | error, with retry
+  format.ts                 Dates in the scan's own time zone, metric copy, small maths
+  bands.ts                  Calm / Dipped / Rough thresholds and their plain-language copy
+  story/                    The "story engine": raw report -> what the page says
+    events.ts               Trips (from scan locations), product changes, cycle
+    patterns.ts             Group comparisons, strength, caveats when causes overlap
+    story.ts                buildStory(): shape, headline, areas, latest scan
+    story.test.ts           Runs all four people through the engine
+components/report/
+  ReportScreen.tsx          Page composition and state switching
+  Dial, TodayCard, Areas, Patterns, Timeline, Routine, ScanStrip, FirstScan
+  ScanSheet, GuideSheet     Native <dialog> bottom sheets
+  states.tsx                Skeleton loading, error with retry, not found
+  ui/                       Card, Section, Pill, Icon, Sheet + shared text styles
+  *.module.css              One CSS module per component, tokens only
+public/prototype/           Generated design prototype (see below)
+```
+
+**How it fits together.** The page never hard-codes a person. `buildStory()` turns whatever the API
+returns into a `Story` (shape `first` | `trend`, areas, insights, events), and each component only
+renders a slice of it. That is why one code path handles Noor's busy month, Maya's two areas,
+Jordan's single scan and Sam's messy data (unsorted scans, null scores, a missing photo).
+
+**Conventions.**
+- Every score reads the same way round: higher is better. Colour always comes with a word.
+- No hex values in components. Colours are tokens in `globals.css`. Per-item colour uses
+  `data-*` attributes (`data-band`, `data-kind`), and inline styles only pass CSS variables.
+- Patterns say how sure they are ("Likely", "Possible", "Can't separate yet"), never a diagnosis.
+- Times are shown in the time zone the scan was taken in.
+
+**Commands**
+
+```
+npm install
+npm run dev         # http://localhost:3000
+npm run lint        # ESLint (next/core-web-vitals + typescript)
+npm run typecheck
+npm test            # Vitest: story engine + formatting
+npm run build
+```
+
+**About `public/prototype/`.** It is the high-fidelity interactive design, exported as one HTML file
+from my design canvas. It is a design artefact, not hand-maintained code, which is why it isn't
+structured like the app. It uses mock photos only; the real scan photos stay private.
+
+---
+
+# Original brief
 
 Thanks for spending time on this. We're a small team building a skin-tracking app.
 A person scans an area of their skin every few days, and we turn each scan into a

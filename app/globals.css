@@ -14,6 +14,12 @@
   --bronze-deep: #80601f;
   --clay: #a9472c;
   --hairline: rgba(46, 42, 36, 0.1);
+  --plum: #9a6a7a;
+
+  /* how calm a scan was (see lib/bands.ts) */
+  --band-calm: var(--sage);
+  --band-dipped: var(--amber);
+  --band-rough: var(--clay);
 
   --serif: "EB Garamond", Georgia, serif;
   --sans: var(--font-geist-sans), -apple-system, system-ui, sans-serif;

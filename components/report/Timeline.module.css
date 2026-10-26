@@ -1,0 +1,72 @@
+/* timeline */
+.timeline {
+  position: relative;
+  margin: 0;
+  padding: 4px 0 2px;
+  list-style: none;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 10px;
+  bottom: 0;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--sage), var(--amber) 40%, var(--clay) 60%, var(--sage) 90%, rgba(95, 132, 102, 0));
+  opacity: 0.8;
+}
+
+.event {
+  position: relative;
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  gap: 12px;
+  padding: 0 0 20px 22px;
+}
+
+.event::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--dot, var(--sage));
+  box-shadow: 0 0 0 3px #fff;
+}
+
+.eventDay {
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 21px;
+}
+
+.eventDetail {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.event[data-kind="product-start"] {
+  --dot: var(--sage);
+}
+
+.event[data-kind="product-stop"] {
+  --dot: var(--clay);
+}
+
+.event[data-kind="trip"] {
+  --dot: var(--amber);
+}
+
+.event[data-kind="cycle"] {
+  --dot: var(--plum);
+}
+
+.event[data-kind="note"] {
+  --dot: var(--faint);
+}

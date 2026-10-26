@@ -1,0 +1,140 @@
+/* dial */
+.dialWrap {
+  position: relative;
+  margin: 18px auto 0;
+  width: 100%;
+  max-width: 362px;
+}
+
+.dial {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.mark {
+  stroke-linecap: round;
+  animation: draw 0.7s var(--ease) both;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: var(--len);
+  }
+}
+
+.score {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 46%;
+  text-align: center;
+}
+
+.scoreNum {
+  font-family: var(--serif);
+  font-size: 64px;
+  line-height: 64px;
+}
+
+.scoreInfo {
+  position: absolute;
+  top: 2px;
+  margin-left: 6px;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0;
+}
+
+.scoreInfo > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--chip);
+  box-shadow: var(--chip-edge);
+  color: var(--muted);
+}
+
+.delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.deltaChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 100px;
+  background: rgba(95, 132, 102, 0.16);
+  color: var(--forest);
+  font-weight: 600;
+}
+
+.deltaChip[data-down="true"] {
+  background: rgba(169, 71, 44, 0.12);
+  color: var(--clay);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 14px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+  color: var(--faint);
+}
+
+.legend i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 5px;
+  border-radius: 50%;
+}
+
+.track {
+  fill: none;
+  stroke: var(--sand);
+  stroke-linecap: round;
+}
+
+.mark {
+  fill: none;
+}
+
+.mark[data-band="calm"] {
+  stroke: var(--band-calm);
+}
+
+.mark[data-band="dipped"] {
+  stroke: var(--band-dipped);
+}
+
+.mark[data-band="rough"] {
+  stroke: var(--band-rough);
+}
+
+.axis {
+  font-size: 12px;
+  fill: var(--faint);
+}

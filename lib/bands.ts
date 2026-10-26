@@ -1,9 +1,8 @@
 // How a score reads at a glance. Every score is 0–100 and higher is always better,
 // so one set of bands works for every metric, redness and oil balance included.
+// Colours live in CSS (--band-calm / --band-dipped / --band-rough), keyed by data-band.
 
 export type Band = "calm" | "dipped" | "rough";
-
-export const BAND_COLOR: Record<Band, string> = { calm: "#5f8466", dipped: "#c9934f", rough: "#a9472c" };
 
 export const BAND_COPY: Record<Band, { label: string; range: string; means: string }> = {
   calm: { label: "Calm", range: "68 or more", means: "Your skin was settled that day." },

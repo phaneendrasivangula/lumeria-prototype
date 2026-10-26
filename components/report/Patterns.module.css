@@ -1,0 +1,86 @@
+/* patterns */
+.patterns {
+  display: grid;
+  gap: 12px;
+}
+
+.patternTitle {
+  margin: 10px 0 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 28px;
+}
+
+.patternBody {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.caveat {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.compare {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.bar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 10px;
+  font-size: 13px;
+}
+
+.bar span {
+  color: var(--muted);
+}
+
+.bar b {
+  font-weight: 600;
+}
+
+.barTrack {
+  grid-column: 1 / -1;
+  height: 8px;
+  border-radius: 100px;
+  background: var(--sand);
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: inherit;
+}
+
+.evidence {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.evidence li {
+  padding: 6px 0;
+  border-top: 0.5px solid var(--hairline);
+}
+
+.toggle {
+  margin-top: 14px;
+}
+
+.barFill {
+  width: var(--w);
+  background: var(--sage);
+}
+
+.barFill[data-variant="group"] {
+  background: var(--amber);
+}

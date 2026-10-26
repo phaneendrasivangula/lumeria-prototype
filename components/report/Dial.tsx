@@ -1,13 +1,15 @@
-import type { Story } from "@/lib/insights";
+import type { CSSProperties } from "react";
+import type { Story } from "@/lib/story";
 import { dayNumber, fmtDay } from "@/lib/format";
-import { BAND_COLOR, bandOf } from "@/lib/bands";
+import { bandOf } from "@/lib/bands";
 import { Icon } from "./ui";
-import s from "./report.module.css";
+import s from "./Dial.module.css";
 
 const W = 362;
 const CX = W / 2;
 const CY = 176;
 const RINGS = 3;
+const RING_NAMES = ["Outer", "Middle", "Inner"];
 
 function arc(r: number, a0: number, a1: number) {
   const p = (a: number) => `${(CX + r * Math.cos(a)).toFixed(2)} ${(CY + r * Math.sin(a)).toFixed(2)}`;
@@ -32,40 +34,46 @@ export function Dial({ story, onInfo }: { story: Story; onInfo: () => void }) {
 
   return (
     <div className={s.dialWrap}>
-      <svg className={s.dial} viewBox={`0 0 ${W} 196`} role="img" aria-label={`${story.scans.length} scans across ${areas.join(", ")}, ${fmtDay(story.start)} to ${fmtDay(story.end)}`}>
+      <svg
+        className={s.dial}
+        viewBox={`0 0 ${W} 196`}
+        role="img"
+        aria-label={`${story.scans.length} scans across ${areas.join(", ")}, ${fmtDay(story.start)} to ${fmtDay(story.end)}`}
+      >
         {areas.map((area, i) => {
           const r = 168 - i * 24;
           const w = 13 - i * 2;
           return (
             <g key={area}>
-              <path d={arc(r, Math.PI, 2 * Math.PI)} fill="none" stroke="#ede6da" strokeWidth={w} strokeLinecap="round" />
+              <path className={s.track} d={arc(r, Math.PI, 2 * Math.PI)} strokeWidth={w} />
               {story.scans
                 .filter((p) => p.scan.area === area)
                 .map((p) => {
-                  const f = (dayNumber(p.day) - d0) / span;
-                  const a = Math.PI + Math.min(1, Math.max(0, f)) * Math.PI;
+                  const f = Math.min(1, Math.max(0, (dayNumber(p.day) - d0) / span));
+                  const a = Math.PI + f * Math.PI;
                   const h = Math.max(step * 0.62, 0.03);
                   const len = r * h;
+                  // The draw-in animation needs each mark's own length and start time.
+                  const timing = { "--len": len, "--d": `${120 + i * 150 + f * 620}ms` } as CSSProperties;
                   return (
                     <path
                       key={p.scan.id}
                       className={s.mark}
+                      data-band={bandOf(p.scan.scores.redness)}
                       d={arc(r, Math.max(Math.PI, a - h / 2), Math.min(2 * Math.PI, a + h / 2))}
-                      fill="none"
-                      stroke={BAND_COLOR[bandOf(p.scan.scores.redness)]}
                       strokeWidth={w - 2}
                       strokeDasharray={len}
-                      style={{ ["--len" as string]: len, ["--d" as string]: `${120 + i * 150 + f * 620}ms` }}
+                      style={timing}
                     />
                   );
                 })}
             </g>
           );
         })}
-        <text x={6} y={194} fontSize={12} fill="#706860">
+        <text className={s.axis} x={6} y={194}>
           {fmtDay(story.start)}
         </text>
-        <text x={W - 6} y={194} fontSize={12} fill="#706860" textAnchor="end">
+        <text className={s.axis} x={W - 6} y={194} textAnchor="end">
           {fmtDay(story.end)}
         </text>
       </svg>
@@ -96,7 +104,9 @@ export function Dial({ story, onInfo }: { story: Story; onInfo: () => void }) {
 
       <ul className={s.legend} aria-label="Rings">
         {areas.map((a, i) => (
-          <li key={a}>{["Outer", "Middle", "Inner"][i]} · {a.toLowerCase()}</li>
+          <li key={a}>
+            {RING_NAMES[i]} · {a.toLowerCase()}
+          </li>
         ))}
       </ul>
     </div>

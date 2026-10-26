@@ -1,0 +1,42 @@
+.page {
+  max-width: 430px;
+  margin: 0 auto;
+  padding: calc(16px + env(safe-area-inset-top)) var(--gutter) calc(48px + env(safe-area-inset-bottom));
+}
+
+/* header */
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 0 4px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 36px;
+}
+
+.period {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--faint);
+}
+
+/* story */
+.story {
+  margin: 22px 8px 0;
+  text-align: center;
+}
+
+.headline {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 28px;
+}

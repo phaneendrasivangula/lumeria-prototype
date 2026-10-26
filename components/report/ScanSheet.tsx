@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import type { DayPoint } from "@/lib/insights";
+import type { DayPoint } from "@/lib/story";
 import { METRICS, METRIC_COPY, fmtScanTime, mean, metricWord, signed } from "@/lib/format";
 import { Pill, Sheet, ui } from "./ui";
-import s from "./report.module.css";
+import s from "./ScanSheet.module.css";
 
 type Light = "ambient" | "polarized" | "uva";
 const LIGHT_LABEL: Record<Light, string> = { ambient: "Visible", polarized: "Glare-free", uva: "UV" };
@@ -39,7 +39,7 @@ function ScanBody({ p, scans, index, onIndex }: { p: DayPoint; scans: DayPoint[]
           // eslint-disable-next-line @next/next/no-img-element -- local scan photos
           <img src={src} alt={`${scan.area} scan, ${LIGHT_LABEL[light].toLowerCase()} light`} />
         ) : (
-          <p className={s.stateBody} style={{ padding: 24 }}>
+          <p className={`${ui.stateBody} ${s.missing}`}>
             The photo for this scan didn’t upload. Your scores were still recorded.
           </p>
         )}
@@ -54,11 +54,11 @@ function ScanBody({ p, scans, index, onIndex }: { p: DayPoint; scans: DayPoint[]
         </div>
       )}
 
-      <h3 className={s.todayHead} style={{ marginTop: 18 }}>
+      <h3 className={`${ui.cardTitle} ${s.headline}`}>
         {scan.summary.headline}
       </h3>
-      <dl className={s.rows}>
-        <div className={s.row}>
+      <dl className={ui.rows}>
+        <div className={ui.row}>
           <dt>Overall</dt>
           <dd>
             {scan.scores.overall}
@@ -69,10 +69,10 @@ function ScanBody({ p, scans, index, onIndex }: { p: DayPoint; scans: DayPoint[]
           const v = scan.scores[m];
           const u = usual(m);
           return (
-            <div key={m} className={s.row}>
+            <div key={m} className={ui.row}>
               <dt>{METRIC_COPY[m].label}</dt>
               <dd>{v ?? "Not measured"}</dd>
-              <span className={s.rowNote}>
+              <span className={ui.rowNote}>
                 {metricWord(m, v)}
                 {v != null && u != null ? ` · usual ${u}` : ""}
               </span>
@@ -82,13 +82,13 @@ function ScanBody({ p, scans, index, onIndex }: { p: DayPoint; scans: DayPoint[]
       </dl>
 
       {scan.summary.observations.length > 0 && (
-        <ul className={s.list}>
+        <ul className={ui.list}>
           {scan.summary.observations.map((o) => (
             <li key={o}>{o}</li>
           ))}
         </ul>
       )}
-      <div className={s.tip}>
+      <div className={ui.tip}>
         <span>
           <b>Something to try</b>
           {scan.summary.tip}

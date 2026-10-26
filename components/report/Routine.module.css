@@ -1,0 +1,30 @@
+/* routine */
+.products {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.product {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 2px 12px;
+  padding: 16px 0;
+  border-top: 0.5px solid var(--hairline);
+}
+
+.product:first-child {
+  border-top: 0;
+  padding-top: 4px;
+}
+
+.productName {
+  font-weight: 500;
+}
+
+.productMeta {
+  grid-column: 1;
+  font-size: 13px;
+  color: var(--muted);
+}

@@ -1,7 +1,7 @@
-import type { DayPoint } from "@/lib/insights";
+import type { DayPoint } from "@/lib/story";
 import { METRICS, METRIC_COPY, fmtScanTime } from "@/lib/format";
-import { Card, Icon } from "./ui";
-import s from "./report.module.css";
+import { Card, Icon, ui } from "./ui";
+import s from "./TodayCard.module.css";
 
 /** Question 1: how is my skin today? The latest scan, what we saw, and one thing to try. */
 export function TodayCard({ latest, onOpen }: { latest: DayPoint; onOpen: () => void }) {
@@ -11,15 +11,15 @@ export function TodayCard({ latest, onOpen }: { latest: DayPoint; onOpen: () => 
       <span className={s.todayMeta}>
         Latest scan · {fmtScanTime(scan)} · {scan.area}
       </span>
-      <h3 className={s.todayHead}>{scan.summary.headline}</h3>
+      <h3 className={ui.cardTitle}>{scan.summary.headline}</h3>
       {scan.summary.observations.length > 0 && (
-        <ul className={s.list}>
+        <ul className={ui.list}>
           {scan.summary.observations.map((o) => (
             <li key={o}>{o}</li>
           ))}
         </ul>
       )}
-      <div className={s.tip}>
+      <div className={ui.tip}>
         <Icon name="flare" size={18} />
         <span>
           <b>Something to try</b>

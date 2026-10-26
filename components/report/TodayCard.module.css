@@ -1,0 +1,54 @@
+/* today */
+.todayMeta {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bronze-deep);
+  font-weight: 600;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.metric {
+  padding: 10px 0 8px;
+  border-radius: 14px;
+  background: var(--sand-soft);
+  text-align: center;
+}
+
+.metric span {
+  display: block;
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.metric strong {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 26px;
+}
+
+.linkBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  min-height: 44px;
+  margin-top: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--forest-text);
+  font-weight: 500;
+  cursor: pointer;
+}
