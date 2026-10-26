@@ -1,0 +1,50 @@
+.page {
+  max-width: 430px;
+  margin: 0 auto;
+  padding: calc(40px + env(safe-area-inset-top)) var(--gutter) 48px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 34px;
+  line-height: 41px;
+}
+
+.sub {
+  margin: 6px 0 24px;
+  color: var(--muted);
+}
+
+.list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: block;
+  min-height: 64px;
+  padding: 16px 20px;
+  border-radius: var(--radius-card);
+  background: var(--glass);
+  box-shadow: var(--glass-edge);
+  text-decoration: none;
+}
+
+.name {
+  display: block;
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 26px;
+}
+
+.about {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--muted);
+}

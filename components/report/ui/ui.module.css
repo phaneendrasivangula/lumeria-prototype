@@ -1,0 +1,181 @@
+.card {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  border-radius: var(--radius-card);
+  box-shadow: var(--glass-edge);
+  padding: 20px;
+}
+
+.section {
+  margin-top: 40px;
+}
+
+.sectionHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 0 4px 12px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 28px;
+}
+
+.sectionAside {
+  font-size: 13px;
+  color: var(--faint);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 11px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: inset 0 1px 0.5px rgba(255, 255, 255, 0.7), var(--chip-edge);
+}
+
+.pill[data-tone="good"] {
+  background: linear-gradient(180deg, rgba(95, 132, 102, 0.24), rgba(95, 132, 102, 0.12));
+  color: #2f4a35;
+}
+
+.pill[data-tone="watch"] {
+  background: linear-gradient(180deg, rgba(201, 147, 79, 0.26), rgba(201, 147, 79, 0.12));
+  color: #80601f;
+}
+
+.pill[data-tone="unsure"] {
+  background: linear-gradient(180deg, rgba(169, 71, 44, 0.18), rgba(169, 71, 44, 0.08));
+  color: #a9472c;
+}
+
+.pill[data-tone="neutral"] {
+  background: var(--chip);
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--chip);
+  box-shadow: var(--chip-edge);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.chip[aria-pressed="true"],
+.chip[aria-expanded="true"] {
+  background: var(--forest);
+  color: #fbf8f0;
+}
+
+.primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 50px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 55%), var(--forest);
+  box-shadow: inset 0 1px 0.5px rgba(255, 255, 255, 0.35), 0 8px 15px rgba(0, 0, 0, 0.04);
+  color: #fbf8f0;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Bottom sheet built on <dialog>: the browser handles focus, Esc and the backdrop */
+.sheet {
+  width: 100%;
+  max-width: 430px;
+  max-height: calc(100dvh - 48px);
+  margin: auto auto 0;
+  padding: 0;
+  border: 0;
+  border-radius: 28px 28px 0 0;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 -8px 48px rgba(0, 0, 0, 0.16);
+  overflow: hidden;
+}
+
+.sheet::backdrop {
+  background: rgba(24, 18, 12, 0.36);
+}
+
+.sheet[open] {
+  animation: sheetUp 0.5s var(--ease);
+}
+
+@keyframes sheetUp {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+}
+
+.sheetInner {
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+  padding: 8px 20px calc(28px + env(safe-area-inset-bottom));
+  overscroll-behavior: contain;
+}
+
+.grabber {
+  display: block;
+  width: 36px;
+  height: 5px;
+  margin: 0 auto 8px;
+  border-radius: 100px;
+  background: rgba(60, 60, 67, 0.3);
+}
+
+.sheetHead {
+  position: sticky;
+  top: -8px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 -20px 8px;
+  padding: 8px 20px 10px;
+  background: linear-gradient(180deg, #fff 70%, rgba(255, 255, 255, 0));
+}
+
+.sheetTitle {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--chip);
+  box-shadow: var(--chip-edge);
+  cursor: pointer;
+}
