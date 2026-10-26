@@ -59,10 +59,14 @@ a { color: inherit; text-decoration: none; }
 .navpill a.bump .ic { animation: bump 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
 @keyframes bump { 0% { transform: scale(1); } 30% { transform: scale(0.82); } 100% { transform: scale(1); } }
 .navscan { position: relative; isolation: isolate; width: 62px; height: 62px; flex-shrink: 0; border-radius: 296px; display: flex; align-items: center; justify-content: center; }
-/* the scan button wears the primary CTA: forest fill, soft top light, glass edges, cream icon */
-.navscan { background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 55%), #2F4A35; color: #FBF8F0; box-shadow: inset 0 1px 0.5px rgba(255,255,255,0.35), inset 0 -1px 0.5px rgba(255,255,255,0.10), inset 1.25px 0 0 -0.75px rgba(255,255,255,0.25), inset -1.25px 0 0 -0.75px rgba(255,255,255,0.25), 0 0 0 0.5px rgba(0,0,0,0.05), 0 8px 15px rgba(0,0,0,0.04); }
+/* the scan button is the Liquid Glass CTA, layer by layer: white backing at 94%, a forest tint (plus-darker), then the glass edge; white symbol on top */
+.navscan { border-radius: 1000px; color: #FFFFFF; }
 .navscan .lglass { display: none; }
-.navscan svg { width: 28px; height: 28px; fill: #FBF8F0; }
+.navscan .bg { position: absolute; inset: 0; z-index: 0; border-radius: 1000px; pointer-events: none; }
+.navscan .wb { position: absolute; inset: -0.5px; background: #FFFFFF; opacity: 0.94; border-radius: 1000px; }
+.navscan .tint { position: absolute; inset: -0.5px; background: #2F4A35; mix-blend-mode: plus-darker; border-radius: 1000px; }
+.navscan .gl { position: absolute; inset: 0; border-radius: 1000px; background: radial-gradient(120% 90% at 18% -10%, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 45%), radial-gradient(90% 80% at 90% 120%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 50%); box-shadow: inset 1.5px 1.5px 0.5px -0.5px rgba(255,255,255,0.55), inset -1px -1px 0.5px -0.5px rgba(255,255,255,0.35), inset 0 0 0 0.5px rgba(255,255,255,0.22), 0 0 0 0.5px rgba(0,0,0,0.05), 0 8px 15px rgba(0,0,0,0.06); }
+.navscan svg { position: relative; z-index: 1; width: 28px; height: 28px; fill: #FFFFFF; }
 
 /* the bar tucks in while you read (scrolling down) and comes back when you scroll up or reach the end, as iOS 26 tab bars do */
 .navrow { transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
@@ -214,7 +218,7 @@ a { color: inherit; text-decoration: none; }
   function dockHTML() {
     return '<div class="navrow"><div class="navpill"><span class="lglass" aria-hidden="true"></span><span class="navind" aria-hidden="true"></span>' + TABS.map(function (t) {
       return '<a href="' + t[2] + '.dc.html" data-tab="' + t[0] + '"><span class="ic"><span class="off">' + D.nav[t[0]] + '</span><span class="on">' + D.nav[t[0] + '-on'] + '</span></span><span class="lb">' + t[1] + '</span>' + '</a>';
-    }).join('') + '</div><a class="navscan" href="FlScan.dc.html" aria-label="Scan"><span class="lglass" aria-hidden="true"></span>' + D.nav.scan + '</a></div>';
+    }).join('') + '</div><a class="navscan" href="FlScan.dc.html" aria-label="Scan"><span class="bg" aria-hidden="true"><span class="wb"></span><span class="tint"></span><span class="gl"></span></span>' + D.nav.scan + '</a></div>';
   }
   function setTab(root, tab, bounce) {
     var i = -1, links = root.querySelectorAll('.navpill a');
