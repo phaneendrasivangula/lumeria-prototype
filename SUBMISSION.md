@@ -31,7 +31,7 @@ Loading, error (with retry), not found and empty all have their own designed scr
 
 ## How I got here
 
-**1. Reading the data first.** Before drawing anything I went through all four people's scans and wrote down what their month actually looked like. Noor's was the interesting one: she switched from retinol to azelaic acid the same week she flew to Phoenix, and her skin calmed down after. That told me the report couldn't just say "the product worked".
+**1. Reading the data first.** Before drawing anything I went through all four people's scans and wrote down what their month actually looked like. Noor's was the interesting one: she started retinol the same week she flew to dry Phoenix and her skin got red, then switched to azelaic acid and calmed down. That told me the report couldn't just blame or credit one thing.
 
 **2. Talking to people.** I asked two friends what they'd want from a monthly skin report. Later, once there was something to click, they used it and I watched where they got stuck. These sessions covered two things: what they wanted to get out of the report, and whether they could actually use it.
 
@@ -52,7 +52,7 @@ Loading, error (with retry), not found and empty all have their own designed scr
 
 - **Higher is always better.** Redness and oil balance already work that way in the data, so I made it the rule for every number. Every colour also comes with a word, so nobody has to decode a chart.
 - **Story before numbers.** People open a skin report to find out "am I OK, and why?", not to read a table. The headline and dial come first, and the data is one tap away.
-- **Honest about what we don't know.** The report doesn't give Noor's azelaic acid the credit. It says the switch and the trip can't be separated yet, and suggests a way to tell them apart. Nothing reads as a diagnosis.
+- **Honest about what we don't know.** Noor's red week lined up with both the retinol and the Phoenix trip. The report doesn't pick one. It says they can't be separated yet, and suggests a 2-week test to tell them apart. Nothing reads as a diagnosis.
 - **Nothing is written for Noor.** `lib/story` doesn't know who anyone is. Trips are found from scan locations, and a pattern only shows up when there's enough data behind it.
 - **Local time.** A scan taken in Phoenix shows Phoenix time.
 - **Geist instead of Montserrat.** I started with Montserrat, but it didn't work for the people reading the report or for the theme. Its wide, geometric letters felt loud next to the calm, soft look, and long sentences and lots of numbers were harder to read on a phone. Geist is quieter and easier to read at small sizes, and its numbers line up neatly, so the scores and the dial feel calmer.
