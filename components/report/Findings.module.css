@@ -54,6 +54,8 @@
 
 .pillRow {
   display: flex;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 8px;
 }
 
@@ -106,4 +108,29 @@
 
 .spacer {
   height: 16px;
+}
+
+/* the kind of finding as a small tinted glyph, ahead of its confidence pill */
+.kind {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--wash);
+  color: var(--muted);
+}
+.kind[data-tone="good"] {
+  background: var(--tint-good);
+  color: var(--forest-text);
+}
+.kind[data-tone="alert"] {
+  background: var(--tint-alert);
+  color: var(--clay);
+}
+.kind[data-tone="watch"] {
+  background: var(--tint-gold);
+  color: var(--bronze-deep);
 }

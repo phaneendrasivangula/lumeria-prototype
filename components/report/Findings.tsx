@@ -1,10 +1,23 @@
 "use client";
 
-import { brief } from "@/lib/format";
 import { useState } from "react";
+import { brief } from "@/lib/format";
 import type { Finding } from "@/lib/story/types";
-import { Card, ChipButton, Icon, MatchQuestion, Pill } from "./ui";
+import { Card, ChipButton, Icon, type IconName, MatchQuestion, Pill } from "./ui";
 import s from "./Findings.module.css";
+
+/** What each kind of finding is about, as a glyph: a product, a trip, sleep, a stretch of days, a trend, a gap. */
+const KIND_ICON: Record<Finding["kind"], IconName> = {
+  swap: "spa",
+  confound: "join_inner",
+  trip: "flight",
+  sleep: "moon",
+  stress: "waves",
+  dip: "history",
+  trend: "bar_chart",
+  steady: "water_drop",
+  missing: "info",
+};
 
 /**
  * A list of patterns, each saying how sure it is. On the Summary the first one carries Explain / Show data and the
@@ -31,11 +44,12 @@ export function Findings({
             <li key={f.id} className={s.item}>
               <button type="button" className={s.main} onClick={() => onShowData(f)}>
                 <span className={s.text}>
-                  {f.confidence && (
-                    <span className={s.pillRow}>
-                      <Pill tone={f.tone}>{f.confidence}</Pill>
+                  <span className={s.pillRow}>
+                    <span className={s.kind} data-tone={f.tone} aria-hidden>
+                      <Icon name={KIND_ICON[f.kind]} size={16} />
                     </span>
-                  )}
+                    {f.confidence && <Pill tone={f.tone}>{f.confidence}</Pill>}
+                  </span>
                   <span className={s.title}>{f.title}</span>
                   <span className={s.body}>{brief(f.body)}</span>
                 </span>
