@@ -48,7 +48,11 @@ describe("streak", () => {
     expect([s.days, s.total, s.best, s.current]).toEqual([25, 30, 7, 3]);
     expect(s.marks.filter(Boolean).length).toBe(25);
   });
-  it("starts Jordan at day 1", () => {
+  it("starts Jordan at day 1, and invites Maya (back after five weeks) to start again", () => {
     expect(streakFor(jordanJson).current).toBe(1);
+    expect(streakFor(mayaJson)).toMatchObject({ current: 0, nudge: "Scan today to start a new streak." });
+  });
+  it("encourages, with the real numbers", () => {
+    expect(streakFor(noorJson).nudge).toBe("5 more days beats your best run of 7.");
   });
 });

@@ -41,7 +41,7 @@ components/report/
   Reveal                          The screen between loading and the report: one number, one sentence, the ring
                                   drawing itself in; "See your report" or the quick-insight cards. RevealLoading is
                                   its loading state, so the first open goes loading → reveal → report without a jump
-  StreakCard                      The streak as a layered glass card with the Lumeria sun; ?streak=b|c for the other looks
+  StreakCard                      The streak as one vertical glass card with depth: it tilts as it scrolls and under a finger
   QuickInsights                   The swipeable cards (scroll-snap, arrows, dots), inside the report's page sheet
   Screen, TabBar, TitleBar        Phone column, morning wash, frosted pinned header, floating glass tab bar
   Dial, Highlights, AreaCards, Findings, Timeline, Routine, Suggestions, FirstScan   Summary sections

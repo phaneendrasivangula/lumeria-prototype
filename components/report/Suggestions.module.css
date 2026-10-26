@@ -68,13 +68,6 @@
   color: var(--ink);
 }
 
-.rowBody {
-  display: block;
-  margin-top: 2px;
-  font-size: 14px;
-  line-height: 20px;
-  color: var(--muted);
-}
 
 .rowCta {
   display: inline-block;

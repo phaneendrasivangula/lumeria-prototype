@@ -1,83 +1,102 @@
 "use client";
 
-import { useId } from "react";
+import { useEffect, useRef } from "react";
 import type { Streak } from "@/lib/story/streak";
 import { Icon } from "./ui";
 import s from "./StreakCard.module.css";
 
-export type StreakStyle = "a" | "b" | "c";
-
-/** The Lumeria sun as a line drawing, for the card's watermark: outlined rays over a half sun and the water line. */
-function Sun({ className }: { className?: string }) {
-  const id = useId().replace(/:/g, "");
-  const rays = Array.from({ length: 9 }, (_, i) => {
-    const a = Math.PI * (0.1 + (0.8 * i) / 8);
-    const long = i % 2 === 0;
-    const r1 = long ? 118 : 98;
-    return { x1: 120 + 64 * Math.cos(a), y1: 130 - 64 * Math.sin(a), x2: 120 + r1 * Math.cos(a), y2: 130 - r1 * Math.sin(a), w: long ? 16 : 13 };
-  });
-  // outlined shapes, as on the logo: a thick white stroke with a thinner black one cut out of it (an SVG mask)
-  return (
-    <svg className={className} viewBox="0 0 240 170" aria-hidden>
-      <defs>
-        <mask id={`sun${id}`} maskUnits="userSpaceOnUse" x="0" y="0" width="240" height="170">
-          <g stroke="white" fill="none" strokeLinecap="round">
-            {rays.map((r, i) => (
-              <line key={i} x1={r.x1} y1={r.y1} x2={r.x2} y2={r.y2} strokeWidth={r.w} />
-            ))}
-            <path d="M 66 130 A 54 54 0 0 1 174 130" strokeWidth="2.2" />
-            <path d="M 8 142 C 70 126, 150 158, 234 134" strokeWidth="2" />
-            <path d="M 40 157 C 92 146, 162 168, 212 152" strokeWidth="2" />
-          </g>
-          <g stroke="black" fill="none" strokeLinecap="round">
-            {rays.map((r, i) => (
-              <line key={i} x1={r.x1} y1={r.y1} x2={r.x2} y2={r.y2} strokeWidth={r.w - 3.6} />
-            ))}
-          </g>
-        </mask>
-      </defs>
-      <rect width="240" height="170" fill="currentColor" mask={`url(#sun${id})`} />
-    </svg>
-  );
-}
-
 /**
- * The scanning streak as a small glass card, a quiet visual break near the end of the report: the run of days in a
- * row, the month's days scanned and the best run, and a way into the full streak history (a placeholder for now).
- * Three looks: a: sunlit bone card, tilted, with a second card behind; b: evergreen with a gold sun;
- * c: sage glass with the month as a row of dots.
+ * The scanning streak as one vertical glass card over soft colour: a visual pause in a text-heavy report and a nudge to
+ * keep scanning. The run of days in a row, the month as dots, one encouraging line with the real numbers, and "View
+ * your streaks" (a placeholder for now).
+ *
+ * It has depth: the card tilts gently as it scrolls through the screen and follows a finger or pointer, its layers
+ * (number, dots, words) sit at different depths, and a soft glare slides across the glass. Still under reduced motion.
  */
-export function StreakCard({ streak, look = "a", onMore }: { streak: Streak; look?: StreakStyle; onMore: () => void }) {
-  const day = streak.current === 1 ? "day" : "days";
+export function StreakCard({ streak, onMore }: { streak: Streak; onMore: () => void }) {
+  const card = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = card.current;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let pointer: { x: number; y: number } | null = null;
+    let frame = 0;
+    const paint = () => {
+      frame = 0;
+      const r = el.getBoundingClientRect();
+      // scrolling: -1 when the card enters at the bottom of the screen, +1 as it leaves at the top
+      const travel = Math.max(-1, Math.min(1, (window.innerHeight / 2 - (r.top + r.height / 2)) / (window.innerHeight / 2)));
+      let rx = -travel * 9;
+      let ry = 3;
+      let gx = 50 + travel * 30;
+      let gy = 30 - travel * 40;
+      if (pointer) {
+        const px = (pointer.x - r.left) / r.width - 0.5;
+        const py = (pointer.y - r.top) / r.height - 0.5;
+        ry = px * 16;
+        rx = -py * 14;
+        gx = 50 + px * 90;
+        gy = 50 + py * 90;
+      }
+      el.style.setProperty("--rx", `${rx.toFixed(2)}deg`);
+      el.style.setProperty("--ry", `${ry.toFixed(2)}deg`);
+      el.style.setProperty("--gx", `${gx.toFixed(1)}%`);
+      el.style.setProperty("--gy", `${gy.toFixed(1)}%`);
+    };
+    const ask = () => {
+      if (!frame) frame = requestAnimationFrame(paint);
+    };
+    const move = (e: PointerEvent) => {
+      pointer = { x: e.clientX, y: e.clientY };
+      ask();
+    };
+    const leave = () => {
+      pointer = null;
+      ask();
+    };
+    paint();
+    window.addEventListener("scroll", ask, { passive: true });
+    window.addEventListener("resize", ask);
+    el.addEventListener("pointermove", move);
+    el.addEventListener("pointerleave", leave);
+    el.addEventListener("pointercancel", leave);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", ask);
+      window.removeEventListener("resize", ask);
+      el.removeEventListener("pointermove", move);
+      el.removeEventListener("pointerleave", leave);
+      el.removeEventListener("pointercancel", leave);
+    };
+  }, []);
+
   return (
-    <section className={s.wrap} data-look={look} aria-labelledby="streak-title">
-      <div className={s.stack}>
-        <span className={s.behind} aria-hidden />
-        <div className={s.card}>
-          <Sun className={s.sun} />
-          <p className={s.eyebrow} id="streak-title">
+    <section className={s.wrap} aria-labelledby="streak-title">
+      <div className={s.scene}>
+        <span className={s.blobA} aria-hidden />
+        <span className={s.blobB} aria-hidden />
+        <span className={s.blobC} aria-hidden />
+        <div ref={card} className={s.card}>
+          <span className={s.pane} aria-hidden />
+          <span className={s.glare} aria-hidden />
+          <p className={`${s.eyebrow} ${s.near}`} id="streak-title">
+            <Icon name="sun" size={16} />
             Your streak
           </p>
-          <p className={s.count}>
+          <p className={`${s.count} ${s.nearest}`}>
             <span className={s.number}>{streak.current}</span>
-            <span className={s.unit}>
-              {day} in a row
-              <span className={s.flame} aria-hidden>
-                <Icon name="sun" size={16} />
-              </span>
-            </span>
+            <span className={s.unit}>{streak.current === 0 ? "a fresh start" : streak.current === 1 ? "day in a row" : "days in a row"}</span>
           </p>
-          {look === "c" && (
-            <div className={s.dots} aria-hidden>
-              {streak.marks.map((m, i) => (
-                <span key={i} className={s.dot} data-on={m ? "" : undefined} data-last={i === streak.marks.length - 1 ? "" : undefined} />
-              ))}
-            </div>
-          )}
-          <p className={s.meta}>
+          <div className={`${s.dots} ${s.near}`} aria-hidden>
+            {streak.marks.map((m, i) => (
+              <span key={i} className={s.dot} data-on={m ? "" : undefined} />
+            ))}
+          </div>
+          <p className={`${s.nudge} ${s.near}`}>{streak.nudge}</p>
+          <p className={`${s.meta} ${s.near}`}>
             {streak.days} of {streak.total} days scanned · best run {streak.best}
           </p>
-          <button type="button" className={s.more} onClick={onMore}>
+          <button type="button" className={`${s.more} ${s.nearest}`} onClick={onMore}>
             View your streaks
             <Icon name="chevron_right" size={18} />
           </button>

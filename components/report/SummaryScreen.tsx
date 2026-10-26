@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { reportCsv } from "@/lib/exportCsv";
 import { METRIC_COPY } from "@/lib/format";
 import type { SkinReport } from "@/lib/types";
@@ -16,27 +16,25 @@ import { FirstScan } from "./FirstScan";
 import { Headline, QuickLink, TopInsight, WelcomeBack } from "./Highlights";
 import { ReportSheets, type SheetState } from "./ReportSheets";
 import { Reveal, RevealLoading } from "./Reveal";
-import { StreakCard, type StreakStyle } from "./StreakCard";
 import { Routine } from "./Routine";
 import { Screen, useScrolledPast } from "./Screen";
 import { EmptyState, ErrorState, LoadingState, NotFoundState } from "./States";
+import { StreakCard } from "./StreakCard";
 import { Suggestions } from "./Suggestions";
 import { Timeline } from "./Timeline";
 import { Period, TitleBar } from "./TitleBar";
 import { SectionHead, TrustNote, useToast } from "./ui";
+import { revealSeen, useRevealPhase } from "./useRevealPhase";
 import s from "./SummaryScreen.module.css";
 
-/** Reports whose reveal has been seen since this page loaded (a full reload shows it again). */
-const REVEALED = new Set<string>();
-
 /** /report/:id — the monthly Summary. Fetches like a real client and shows loading, error and not-found states. */
-export function SummaryScreen({ id, fail, streakLook = "a" }: { id: string; fail: boolean; streakLook?: StreakStyle }) {
+export function SummaryScreen({ id, fail }: { id: string; fail: boolean }) {
   const { state, retry } = useReport(id, fail);
   // On a fresh load the wait happens on the reveal's own evergreen screen, so loading flows straight into the reveal
   // (no summary-shaped skeleton in between). Coming back from an area page, the summary skeleton shows instead.
-  const [dusk] = useState(() => !REVEALED.has(id));
+  const [dusk] = useState(() => !revealSeen(id));
   const empty = state.status === "ready" && !state.report.scans?.length;
-  if (state.status === "ready" && !empty) return <Summary id={id} report={state.report} streakLook={streakLook} />;
+  if (state.status === "ready" && !empty) return <Summary id={id} report={state.report} />;
   if (state.status === "loading" && dusk) return <RevealLoading />;
   return (
     <Screen header={<TitleBar title="Monthly Report" />} tabs={{ id, active: "report" }}>
@@ -48,7 +46,7 @@ export function SummaryScreen({ id, fail, streakLook = "a" }: { id: string; fail
   );
 }
 
-function Summary({ id, report, streakLook }: { id: string; report: SkinReport; streakLook: StreakStyle }) {
+function Summary({ id, report }: { id: string; report: SkinReport }) {
   const summary = useMemo(() => buildSummary(report), [report]);
   const { story, period } = summary;
   const dial = useMemo(
@@ -57,27 +55,8 @@ function Summary({ id, report, streakLook }: { id: string; report: SkinReport; s
   );
   const cards = useMemo(() => buildCards(summary), [summary]);
   const [sheet, setSheet] = useState<SheetState>(null);
-  // The reveal opens the report once per page load: the month in one number and one sentence, then the summary.
-  // Coming back from an area page (client-side) goes straight to the summary.
-  // "reveal": the summary waits, hidden, under it. "enter": the reveal dissolves while the summary rises in, section by
-  // section, and the dial draws itself again. "done": just the summary.
-  const [phase, setPhase] = useState<"reveal" | "enter" | "done">(() => (REVEALED.has(id) ? "done" : "reveal"));
-  const leave = useCallback(
-    (then?: () => void) => {
-      REVEALED.add(id);
-      setPhase("enter");
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      window.setTimeout(
-        () => {
-          setPhase("done");
-          then?.();
-        },
-        reduce ? 0 : 900,
-      );
-    },
-    [id],
-  );
-  const done = useCallback(() => leave(), [leave]);
+  // The reveal opens the report once per page load, then hands over to the summary (see useRevealPhase).
+  const { phase, leave } = useRevealPhase(id);
   const collapsed = useScrolledPast(230);
 
   const hrefFor = (area: string) => areaHref(id, area);
@@ -93,11 +72,12 @@ function Summary({ id, report, streakLook }: { id: string; report: SkinReport; s
       }
       tabs={{ id, active: "report", progressHref }}
     >
+      {/* remounted when the reveal hands over, so the dial draws itself in again as the summary rises */}
       <div key={phase === "reveal" ? "waiting" : "shown"} className={s.stage} data-phase={phase}>
-        <Body id={id} report={report} summary={summary} dial={dial} cards={cards} sheet={sheet} setSheet={setSheet} hrefFor={hrefFor} streakLook={streakLook} />
+        <Body id={id} report={report} summary={summary} dial={dial} cards={cards} sheet={sheet} setSheet={setSheet} hrefFor={hrefFor} />
       </div>
       {phase !== "done" && (
-        <Reveal summary={summary} leaving={phase === "enter"} onDone={done} cards={cards.length} onCards={() => leave(() => setSheet({ kind: "cards" }))} />
+        <Reveal summary={summary} leaving={phase === "enter"} onDone={() => leave()} cards={cards.length} onCards={() => leave(() => setSheet({ kind: "cards" }))} />
       )}
     </Screen>
   );
@@ -112,7 +92,6 @@ function Body({
   sheet,
   setSheet,
   hrefFor,
-  streakLook,
 }: {
   id: string;
   report: SkinReport;
@@ -122,15 +101,15 @@ function Body({
   sheet: SheetState;
   setSheet: (s: SheetState) => void;
   hrefFor: (area: string) => string;
-  streakLook: StreakStyle;
 }) {
   const toast = useToast();
   const streak = useMemo(() => buildStreak(summary), [summary]);
-  const streakCard = <StreakCard streak={streak} look={streakLook} onMore={() => toast("Your streak history is coming to the Lumeria app")} />;
+  const streakCard = <StreakCard streak={streak} onMore={() => toast("Your streak history is coming to the Lumeria app")} />;
   const { story } = summary;
   const explain = (f: (typeof summary.findings)[number]) => setSheet({ kind: "lumi", topic: { script: f.lumi, findingId: f.id } });
   const showData = (f: (typeof summary.findings)[number]) => setSheet({ kind: "evidence", id: f.id });
 
+  // What each suggestion's button does: the dermatologist export downloads a CSV; the rest live in the app (a toast here).
   const act = (sg: Suggestion) => {
     if (sg.id === "derm") {
       const blob = new Blob([reportCsv(report)], { type: "text/csv" });
@@ -204,8 +183,6 @@ function Body({
       )}
       <TrustNote>{summary.trustNote}</TrustNote>
 
-      {streakCard}
-
       {summary.timeline.length > 0 && (
         <section aria-labelledby="events-title">
           <SectionHead id="events-title" title="What happened" />
@@ -214,13 +191,15 @@ function Body({
       )}
 
       <section aria-labelledby="routine-title" id="routine" className={s.anchor}>
-        <SectionHead id="routine-title" title="Your routine" aside={summary.routine.length ? summary.routineRange : undefined} />
+        <SectionHead id="routine-title" title="Your routine" />
         <Routine
           items={summary.routine}
           onAdd={() => toast("You can add products in the Lumeria app")}
           onOpen={(r) => setSheet({ kind: "lumi", topic: { script: r.script } })}
         />
       </section>
+
+      {streakCard}
 
       {summary.suggestions.length > 0 && (
         <section aria-labelledby="suggestions-title">

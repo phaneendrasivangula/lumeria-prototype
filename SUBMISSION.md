@@ -22,7 +22,7 @@ The same code handles the edge cases:
 - **Jordan:** one scan. The page becomes a welcome that shows what more scans will unlock.
 - **Sam:** unsorted scans, unmeasured oil balance, a missing photo and no skin type. Missing values read "Not measured" and charts skip them.
 
-A small glass **streak card** (days in a row, days scanned, best run, worked out from the scan dates) breaks up the text before the timeline; its "View your streaks" is a placeholder. Two other looks: `?streak=b` (evergreen) and `?streak=c` (the month as dots).
+A vertical glass **streak card** (days in a row, the month as dots, one encouraging line, all worked out from the scan dates) sits just before Suggestions. It tilts gently as it scrolls and under a finger. "View your streaks" is a placeholder.
 
 Loading (on first open, the reveal's own screen with a light travelling round the empty ring, so loading flows straight into the reveal; elsewhere a breathing dial while the slow API answers), error with retry (`?fail=1`), not found, and empty (a report with no scans yet) are all designed states. Cards show one sentence each; the full reading is one tap away in Show data and Explain.
 

@@ -88,7 +88,6 @@ export interface Summary {
   areas: AreaCard[];
   timeline: TimelineItem[];
   routine: RoutineItem[];
-  routineRange: string;
   suggestions: Suggestion[];
   trustNote: string;
 }
@@ -590,7 +589,6 @@ export function buildSummary(report: SkinReport): Summary {
     areas,
     timeline: first ? [] : timelineFor(report, story, findings, now),
     routine: routineItems(report.products ?? [], story.end, story),
-    routineRange: `${fmtDay(story.start)} → ${fmtDay(story.end)}`,
     suggestions: first ? [] : suggestionsFor(report, story, findings, !!welcomeBack, now),
     trustNote: trustNoteFor(story),
   };
