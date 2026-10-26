@@ -57,11 +57,25 @@ function Summary({ id, report }: { id: string; report: SkinReport }) {
   const [sheet, setSheet] = useState<SheetState>(null);
   // The reveal opens the report once per page load: the month in one number and one sentence, then the summary.
   // Coming back from an area page (client-side) goes straight to the summary.
-  const [revealed, setRevealed] = useState(() => REVEALED.has(id));
-  const done = useCallback(() => {
-    REVEALED.add(id);
-    setRevealed(true);
-  }, [id]);
+  // "reveal": the summary waits, hidden, under it. "enter": the reveal dissolves while the summary rises in, section by
+  // section, and the dial draws itself again. "done": just the summary.
+  const [phase, setPhase] = useState<"reveal" | "enter" | "done">(() => (REVEALED.has(id) ? "done" : "reveal"));
+  const leave = useCallback(
+    (then?: () => void) => {
+      REVEALED.add(id);
+      setPhase("enter");
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.setTimeout(
+        () => {
+          setPhase("done");
+          then?.();
+        },
+        reduce ? 0 : 900,
+      );
+    },
+    [id],
+  );
+  const done = useCallback(() => leave(), [leave]);
   const collapsed = useScrolledPast(230);
 
   const hrefFor = (area: string) => areaHref(id, area);
@@ -77,17 +91,11 @@ function Summary({ id, report }: { id: string; report: SkinReport }) {
       }
       tabs={{ id, active: "report", progressHref }}
     >
-      <Body id={id} report={report} summary={summary} dial={dial} cards={cards} sheet={sheet} setSheet={setSheet} hrefFor={hrefFor} />
-      {!revealed && (
-        <Reveal
-          summary={summary}
-          onDone={done}
-          cards={cards.length}
-          onCards={() => {
-            done();
-            setSheet({ kind: "cards" });
-          }}
-        />
+      <div key={phase === "reveal" ? "waiting" : "shown"} className={s.stage} data-phase={phase}>
+        <Body id={id} report={report} summary={summary} dial={dial} cards={cards} sheet={sheet} setSheet={setSheet} hrefFor={hrefFor} />
+      </div>
+      {phase !== "done" && (
+        <Reveal summary={summary} leaving={phase === "enter"} onDone={done} cards={cards.length} onCards={() => leave(() => setSheet({ kind: "cards" }))} />
       )}
     </Screen>
   );

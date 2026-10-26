@@ -271,6 +271,20 @@
   height: 104px; /* the button and the link under it */
 }
 
+/* "See your report": the reveal dissolves, opening slightly towards you, as the summary rises underneath */
+.reveal[data-leaving] {
+  pointer-events: none;
+  animation: leave 0.6s var(--ease) forwards;
+}
+
+@keyframes leave {
+  to {
+    opacity: 0;
+    transform: scale(1.06);
+    filter: blur(6px);
+  }
+}
+
 @keyframes draw {
   to {
     stroke-dashoffset: 0;
@@ -336,7 +350,8 @@
   .words,
   .ctas,
   .wordsNow,
-  .seek {
+  .seek,
+  .reveal[data-leaving] {
     animation: none;
   }
   .arc {

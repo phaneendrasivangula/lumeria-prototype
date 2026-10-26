@@ -36,11 +36,14 @@ const TICKS = Array.from({ length: 160 }, (_, i) => {
 export function Reveal({
   summary,
   onDone,
+  leaving = false,
   cards = 0,
   onCards,
 }: {
   summary: Summary;
   onDone: () => void;
+  /** Dissolving away while the summary rises in underneath. */
+  leaving?: boolean;
   cards?: number;
   onCards?: () => void;
 }) {
@@ -70,7 +73,7 @@ export function Reveal({
   }, [onDone]);
 
   return (
-    <div ref={box} tabIndex={-1} className={s.reveal} role="dialog" aria-modal="true" aria-labelledby={titleId}>
+    <div ref={box} tabIndex={-1} className={s.reveal} data-leaving={leaving ? "" : undefined} role="dialog" aria-modal="true" aria-labelledby={titleId}>
       <div className={s.sky} aria-hidden />
       <div className={s.sun} aria-hidden />
       <div className={s.column}>
