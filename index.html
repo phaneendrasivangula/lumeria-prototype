@@ -35,14 +35,20 @@ a { color: inherit; text-decoration: none; }
 #app [aria-label] { touch-action: manipulation; }
 .nsb::-webkit-scrollbar { display: none; }
 /* bottom nav, from v15: a floating glass pill of tabs plus a round scan button */
-.dock { padding: 18px 16px calc(env(safe-area-inset-bottom, 0px) + 14px); background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 55%); }
+/* only a light veil under the bar, so the page stays visible through the glass */
+.dock { padding: 18px 16px calc(env(safe-area-inset-bottom, 0px) + 14px); background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.35) 70%); }
 .navrow { width: 370px; margin: 0 auto; display: flex; align-items: center; gap: 10px; }
-.navpill { position: relative; flex: 1; height: 62px; border-radius: 1000px; padding: 4px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px;
-  /* iOS glass: fill, blur and edge highlights from the glass spec */
-  background: linear-gradient(180deg, rgba(255,255,255,0.86) 0%, rgba(246,246,246,0.74) 100%); -webkit-backdrop-filter: blur(12px) saturate(180%); backdrop-filter: blur(12px) saturate(180%);
-  box-shadow: 1.25px 0 0 -0.75px #D0D0D0, -1.25px 0 0 -0.75px #D0D0D0, 0 0 0 0.5px #E8E8E8, 0 8px 15px rgba(0,0,0,0.02); }
-/* the selected-tab lozenge glides between tabs on a spring instead of jumping */
-.navind { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 14px) / 4); border-radius: 100px; background: #EDEDED; pointer-events: none;
+.navpill { position: relative; isolation: isolate; flex: 1; height: 62px; border-radius: 296px; padding: 4px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; }
+/* Glass Effect layer, from the spec: position absolute, inset 0, radius 296px. Liquid glass: a thin clear body that blurs and
+   lifts what's behind it, bright speculars on the top-left and bottom-right edges, a faint inner rim and a soft drop shadow */
+.lglass { position: absolute; left: 0; right: 0; top: 0; bottom: 0; border-radius: 296px; z-index: -1; pointer-events: none; overflow: hidden;
+  background: linear-gradient(180deg, rgba(255,255,255,0.50) 0%, rgba(255,255,255,0.26) 100%);
+  -webkit-backdrop-filter: blur(10px) saturate(190%) brightness(1.06); backdrop-filter: blur(10px) saturate(190%) brightness(1.06);
+  box-shadow: inset 1.5px 1.5px 0.5px -0.5px rgba(255,255,255,0.95), inset -1px -1px 0.5px -0.5px rgba(255,255,255,0.75),
+    inset 0 0 0 0.5px rgba(255,255,255,0.55), inset 0 0 14px rgba(255,255,255,0.35), 0 0 0 0.5px rgba(0,0,0,0.07), 0 8px 24px rgba(0,0,0,0.10); }
+.lglass::after { content: ""; position: absolute; inset: 0; border-radius: inherit;
+  background: radial-gradient(120% 90% at 18% -10%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 45%), radial-gradient(90% 80% at 90% 120%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 50%); }
+.navind { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 14px) / 4); border-radius: 296px; background: rgba(255,255,255,0.7); box-shadow: inset 0 0 0 0.5px rgba(255,255,255,0.9), 0 1px 4px rgba(0,0,0,0.06); pointer-events: none;
   transition: transform 0.55s cubic-bezier(0.34, 1.32, 0.64, 1), opacity 0.2s ease; }
 .navpill a { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; height: 100%; border-radius: 100px; font: 400 10.5px/12px var(--font-body); color: #A39B90; transition: color 0.25s ease; }
 .navpill a[aria-current="page"] { color: #2E2A24; font-weight: 600; }
@@ -52,10 +58,9 @@ a { color: inherit; text-decoration: none; }
 .navpill a[aria-current="page"] .ic .on { display: block; }
 .navpill a.bump .ic { animation: bump 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
 @keyframes bump { 0% { transform: scale(1); } 30% { transform: scale(0.82); } 100% { transform: scale(1); } }
-.navscan { width: 62px; height: 62px; flex-shrink: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  /* primary CTA glass: forest tint with soft top light and edge speculars */
-  background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 55%), #2F4A35;
-  box-shadow: inset 0 1px 0.5px rgba(255,255,255,0.35), inset 0 -1px 0.5px rgba(255,255,255,0.10), inset 1.25px 0 0 -0.75px rgba(255,255,255,0.25), inset -1.25px 0 0 -0.75px rgba(255,255,255,0.25), 0 0 0 0.5px rgba(0,0,0,0.05), 0 8px 15px rgba(0,0,0,0.04); }
+.navscan { position: relative; isolation: isolate; width: 62px; height: 62px; flex-shrink: 0; border-radius: 296px; display: flex; align-items: center; justify-content: center; }
+/* the scan button is the same liquid glass, tinted forest as the primary action */
+.navscan .lglass { background: linear-gradient(180deg, rgba(64,96,72,0.86) 0%, rgba(47,74,53,0.94) 100%); }
 .navscan svg { width: 28px; height: 28px; fill: #FBF8F0; }
 .navpill a:focus-visible, .navscan:focus-visible { outline: 2px solid var(--forest); outline-offset: -4px; border-radius: 100px; }
 /* pinned top header: the screen's own title row, on frosted glass so content scrolls under it */
@@ -188,9 +193,9 @@ a { color: inherit; text-decoration: none; }
     });
   }
   function dockHTML() {
-    return '<div class="navrow"><div class="navpill"><span class="navind" aria-hidden="true"></span>' + TABS.map(function (t) {
+    return '<div class="navrow"><div class="navpill"><span class="lglass" aria-hidden="true"></span><span class="navind" aria-hidden="true"></span>' + TABS.map(function (t) {
       return '<a href="' + t[2] + '.dc.html" data-tab="' + t[0] + '"><span class="ic"><span class="off">' + D.nav[t[0]] + '</span><span class="on">' + D.nav[t[0] + '-on'] + '</span></span>' + t[1] + '</a>';
-    }).join('') + '</div><a class="navscan" href="FlScan.dc.html" aria-label="Scan">' + D.nav.scan + '</a></div>';
+    }).join('') + '</div><a class="navscan" href="FlScan.dc.html" aria-label="Scan"><span class="lglass" aria-hidden="true"></span>' + D.nav.scan + '</a></div>';
   }
   function setTab(root, tab, bounce) {
     var i = -1, links = root.querySelectorAll('.navpill a');
