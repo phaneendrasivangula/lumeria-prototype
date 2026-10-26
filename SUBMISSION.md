@@ -1,62 +1,81 @@
 # Submission
 
-**Link:** https://lumeria-prototype.vercel.app (best on a phone)
+**Link:** https://lumeria-prototype.vercel.app/report/noor (best on a phone)
 
-- `/report/noor`, `/report/maya`, `/report/jordan`, `/report/sam`: the monthly report, built in Next.js from the mock API
-- `/report/<id>/area/<area>` (e.g. `/report/noor/area/left-cheek`): one area in detail
-- `/report/noor?fail=1`: the error state, with retry
-- `/prototype/` (add `?person=maya`, `sam` or `jordan`): the full interactive app design, every screen for every person
+Other people and states, if you want to poke around:
+- `/report/maya`, `/report/sam`, `/report/jordan`
+- `/report/noor/area/left-cheek` for one area in detail
+- `/report/noor?fail=1` for the error state
+- `/prototype/` (add `?person=maya`, `sam` or `jordan`) for the wider app design: Home, scanning, streaks, reminders
 
-**Time spent:** <!-- Phaneendra: fill in -->
+**Time spent:** About 7 hours.
 
 ## What I built
 
-Start with `/report/noor` on your phone. After a short load, a **reveal** shows the month in one number and one sentence (the ring draws itself to the score), then **See your report** opens the summary. **View quick insights** under the dial (or the link on the reveal) swipes through the month in four cards. The report then answers three questions in order:
+Open Noor's link on your phone. After a short load you get a reveal: the month in one number and one sentence, with the ring drawing itself to her score. **See your report** takes you into the summary. If you'd rather skim, **View quick insights** swipes through the month in four cards.
 
-1. **How is my skin right now?** The one-line story leads ("A rough start, a calm finish."), then a dial shows the whole month at once: one ring per area, one mark per scan, coloured by how calm the skin was that day. In the middle is the latest overall score and how it has changed since the start.
-2. **Is it getting better?** Each area has its own card, compared only with its own usual, because a cheek and a forehead have different normal scores. Tapping one opens the area page: the person's main concern first, the other four measures, what we noticed there, a before-and-after of the first and latest photo, a photo time-lapse with every score against usual, and questions to ask Lumi.
-3. **Why?** What might be related (each card says what we saw and, separately, what may be related), a timeline of what happened, and the routine. Each pattern says how sure it is: *Likely*, *Possible*, *Can't separate yet*. **Show data** opens the evidence (chart, the two groups compared, the photos); **Explain** opens Lumi, a scripted chat that answers from the person's own numbers.
+The summary tries to answer three questions, in this order:
 
-The same code handles the edge cases:
-- **Maya:** two areas, an unexplained red week, and a "Welcome back" banner because her last scan is five weeks old.
-- **Jordan:** one scan. The page becomes a welcome that shows what more scans will unlock.
-- **Sam:** unsorted scans, unmeasured oil balance, a missing photo and no skin type. Missing values read "Not measured" and charts skip them.
+1. **How is my skin right now?** One line of story first ("A rough start, a calm finish."), then a dial that shows the whole month at once: one ring per area, one mark per scan, coloured by how calm the skin was that day. The middle has the latest score and how much it moved.
+2. **Is it getting better?** A card for each area, compared only with that area's own usual. A cheek and a forehead have different normals, so comparing them to each other would be misleading. Tap one to see the area in detail: the main concern, the other measures, a before-and-after of the first and latest photo, and every scan over time.
+3. **Why?** What might be related, a timeline of what happened, and the routine. Every pattern says how sure it is (*Likely*, *Possible*, *Can't separate yet*). **Show data** opens the evidence and **Explain** opens Lumi, which answers from the person's own numbers.
 
-A vertical glass **streak card** (days in a row, the month as dots, one encouraging line, all worked out from the scan dates) sits just before Suggestions. It tilts gently as it scrolls and under a finger. "View your streaks" is a placeholder.
+Near the bottom there's a small glass streak card, to nudge people to keep scanning. It's worked out from the scan dates only.
 
-Loading (on first open, the reveal's own screen with a light travelling round the empty ring, so loading flows straight into the reveal; elsewhere a breathing dial while the slow API answers), error with retry (`?fail=1`), not found, and empty (a report with no scans yet) are all designed states. Cards show one sentence each; the full reading is one tap away in Show data and Explain.
+The same code handles the awkward cases:
+- **Maya** has two areas, a red week nobody can explain, and hasn't scanned in five weeks, so she gets a "Welcome back".
+- **Jordan** has one scan, so his report becomes a welcome that shows what more scans will unlock.
+- **Sam** has unsorted scans, a measure that was never taken, a missing photo and no skin type. Gaps say "Not measured" and the charts skip them.
 
-`/prototype/` is the same design as an interactive app, beyond what the API covers: Home, the scan sheet, the post-scan streak, reminders, the dermatologist export and the monthly-report notification, each built for every person. The code tour is in the README.
+Loading, error (with retry), not found and empty all have their own designed screens. The API is slow on purpose, so the first load happens on the reveal's own screen and flows straight into it.
+
+## How I got here
+
+**1. Reading the data first.** Before drawing anything I went through all four people's scans and wrote down what their month actually looked like. Noor's was the interesting one: she switched from retinol to azelaic acid the same week she flew to Phoenix, and her skin calmed down after. That told me the report couldn't just say "the product worked".
+
+**2. Talking to people.** I asked two friends what they'd want from a monthly skin report. Later, once there was something to click, they used it and I watched where they got stuck. These sessions covered two things: what they wanted to get out of the report, and whether they could actually use it.
+
+**3. Rough layouts in Figma.** I sketched the layouts and the card ideas I wanted to explore in Figma. That's also where the dial idea started: one picture of the whole month instead of a row of charts.
+
+**4. Variations.** I built on the Figma work with Claude and explored a few directions for each of the main pieces:
+- **Summary:** different orders and densities until the story, dial and area cards read top to bottom.
+- **Quick insight cards:** plain cards first, then glass and gradient versions. I picked one and made it taller, with more room to breathe.
+- **The reveal:** a few takes inspired by how Superpower and Whoop open their results. I chose one and moved it into Lumeria's colours (an evergreen dusk), tried several ring patterns and kept the fine halo ticks.
+- **Streak card:** three versions. I kept the simplest, a single vertical glass card with a gentle parallax tilt.
+- **Things I dropped:** I thought about a "skin age" card and left it out. It's a single number that sounds like a medical judgement, which goes against the rest of the report.
+
+**5. Testing more cases.** Two people can't cover every case, so I also used a repo of artificial users to run more scenarios through the report: different gaps, missing data, single scans and so on. The story logic (`lib/story`) has tests that run all four real people through it too.
+
+**6. Cutting words.** Every early version had too much text. I cut each card down to one sentence and moved the detail behind **Show data** and **Explain**.
 
 ## Key decisions
 
-- **One rule for every number: higher is better.** Redness and oil balance already work this way in the data. I made that the headline rule, and every colour also has a word, so nobody has to decode a chart.
-- **A story before numbers.** People open a skin report to find out "am I OK, and why?", not to read a table. So the headline and the dial come first, and the data sits one tap away.
-- **Honest about uncertainty.** Noor switched from retinol to azelaic acid in the same week she was in Phoenix. The report doesn't credit the product with the improvement; it says the two causes can't be separated yet and suggests how to tell them apart. Nothing reads as a diagnosis or a medical claim.
-- **Data-driven, not Noor-driven.** `lib/story` has no idea who Noor is. Trips are found from the scan locations, and patterns appear only when the groups are big enough. Tests run all four people through it.
-- **Local time everywhere.** A scan taken in Phoenix shows Phoenix time.
-- **Accessible by default.** I checked text colours against WCAG AA, and the touch targets are 44 pt or larger. The sheets are native `<dialog>` elements, and the page respects reduced motion. axe-core reports no violations on any route.
+- **Higher is always better.** Redness and oil balance already work that way in the data, so I made it the rule for every number. Every colour also comes with a word, so nobody has to decode a chart.
+- **Story before numbers.** People open a skin report to find out "am I OK, and why?", not to read a table. The headline and dial come first, and the data is one tap away.
+- **Honest about what we don't know.** The report doesn't give Noor's azelaic acid the credit. It says the switch and the trip can't be separated yet, and suggests a way to tell them apart. Nothing reads as a diagnosis.
+- **Nothing is written for Noor.** `lib/story` doesn't know who anyone is. Trips are found from scan locations, and a pattern only shows up when there's enough data behind it.
+- **Local time.** A scan taken in Phoenix shows Phoenix time.
+- **Accessible.** Text contrast meets WCAG AA, touch targets are at least 44pt, the sheets are native `<dialog>`s, and reduced motion is respected. axe-core finds no issues on any page.
 
 ## Extra data I assumed
 
-- **Lumi chat:** scripted answers built from the person's own scans and notes, to show what explaining a pattern could feel like. A real version would need an LLM with strict no-medical-claims guardrails; a test already scans every generated sentence for diagnosis words.
-- **Streaks:** worked out from the scan dates only (the streak card in the report, and the post-scan streak in the prototype). Nothing extra is collected.
-- **Trip and place photos (prototype only):** illustrative images of Phoenix and of oily skin, used on the pattern orbs.
-- Everything else in the Next.js report comes from what the API returns. Actions with no backend yet (reminders, the 2-week test, adding a skin type) show a short confirmation instead.
+- **Lumi:** scripted answers built from the person's own scans and notes, to show what explaining a pattern could feel like. A real version would need an LLM with strict no-medical-claims guardrails. A test already checks every generated sentence for diagnosis words.
+- **Streaks:** worked out from the scan dates only. Nothing extra is collected.
+- **Trip and place photos (prototype only):** illustrative images used on the pattern screens.
+- Everything else in the report comes from the API. Actions with no backend yet (reminders, the 2-week test, adding a skin type) show a short confirmation.
 
-## What I cut / would do next
+## What I'd do next
 
-- **Bring the post-scan streak and Home into the Next app.** They are designed in the prototype but not built against the API.
-- **Photo alignment** for the before-and-after, so the two scans line up exactly.
-- **Usability tests with real users,** on whether people read the dial correctly without the guide.
-- **Visual regression tests** (Playwright screenshots per person) to go with the unit tests.
+- Build Home and the post-scan streak into the real app. They're designed in the prototype but not wired to the API.
+- Line up the before-and-after photos so the two scans match exactly.
+- Test with more people, especially on whether the dial makes sense without the guide.
+- Add screenshot tests for each person alongside the unit tests.
 
 ## How I used AI tools
 
-<!-- Phaneendra: adjust to taste -->
-I used Claude as a pair throughout. It helped explore layout variations on the design canvas, write the TypeScript and CSS, run accessibility and contrast checks, and draft copy. I made the product and design calls: the dial concept, the "can't separate yet" honesty, the copy tone, the visual direction, and which variations to keep. I overrode suggestions that drifted toward clinical language or towards adding more charts.
+I started in Figma, laying out the screens and card ideas I wanted to try. Then I used Claude to build on top of that: generating variations to compare, writing the TypeScript and CSS, and running accessibility and contrast checks. I made the product and design calls myself: the dial, being upfront about "can't separate yet", the tone, the visual direction and which variations to keep. When suggestions drifted towards clinical language or more charts, I pushed back.
 
 ## Anything else
 
-- The real scan photos are git-ignored and never deployed. The live site uses the mock photos.
-- `public/prototype/index.html` is generated output from my design canvas, not hand-written code.
+- The real scan photos are git-ignored and never deployed. The live site uses mock photos.
+- `public/prototype/index.html` is exported from my design work, not hand-written code.
