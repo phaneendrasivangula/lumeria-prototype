@@ -79,3 +79,40 @@ I started in Figma, laying out the screens and card ideas I wanted to try. Then 
 
 - The real scan photos are git-ignored and never deployed. The live site uses mock photos.
 - `public/prototype/index.html` is exported from my design work, not hand-written code.
+
+## Appendix: the full process, step by step
+
+For anyone curious, this is everything that came before the final screens. Most of it lives on my design canvas: close to 490 screens across all the rounds.
+
+**Research and framing**
+1. **Data from the prompt.** I went through all four people's scans, scores and notes, and wrote down what each month actually looked like.
+2. **User research.** I talked with two friends about how they track their skin and what they'd want from a monthly report, then grouped what I heard into themes.
+3. **Secondary research.** I read up on how people talk about skin changes, and on how health and fitness apps report progress.
+4. **Journey map.** From the push notification, to opening the report, to deciding what to do next.
+5. **Scenario map.** The good month, the bad month, the first scan, coming back after a gap, and messy data.
+6. **Opportunities.** What the user needs, what Lumeria needs, and a few bigger what-ifs.
+7. **Inspiration.** Direct (skin and health apps), indirect (Apple Health, Whoop) and a few out-of-the-box picks.
+
+**Exploration**
+
+8. **Early app explorations.** 14 rounds (v3 to v16) of the wider app, covering the weekly loop, the skin score, the colours and glass, and the onboarding, scan, Lumi and routine flows.
+9. **Quick takes.** Eight fast "Ups" on Noor's October report, plus sketches of the ambitious what-ifs from step 6. In total, 18 screens.
+10. **End-to-end wireframes.** Noor's whole report, made clickable: the story, the chapters, the sheets, the edge cases (Jordan, Maya, Sam) and the loading and error states.
+
+**Structure: flows and IA**
+
+11. **Flow maps.** Every screen once, with a line for every tap: the ways in, the summary, what opens from it, the detail screens, and where it ends.
+12. **New information architecture.** The summary became the global view: score, top insight, areas, patterns, what happened, routine and suggestions. Each area got its own page.
+
+**Visual design**
+
+13. **Visual directions.** Two rounds of five, so ten directions in all, followed by infographic variations that showed more information for the same month.
+14. **The summary chart.** 14 dial variations before I settled on the ring.
+15. **Report depth.** Three depths (glance, closer, deep dive), then a second version of the report built on real scans with clearer navigation.
+
+**Testing and final polish**
+
+16. **Usability sessions.** My two friends used the clickable version. I fixed what tripped them up and checked the report against their goals.
+17. **Artificial users.** I ran more scenarios through a repo of synthetic users to catch cases four people can't cover.
+18. **Final details.** I tried four card surfaces for quick insights, several takes on the reveal (then the Lumeria palette and four ring patterns) and three streak cards. I also cut the copy down to one sentence a card.
+19. **Build.** I built it in Next.js against the mock API, checked every person's screens, tested loading, error, not-found and empty, and ran an accessibility audit on every page.
