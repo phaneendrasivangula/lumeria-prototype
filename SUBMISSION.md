@@ -40,7 +40,7 @@ Loading, error (with retry), not found and empty all have their own designed scr
 **4. Variations.** I built on the Figma work with Claude and explored a few directions for each of the main pieces:
 - **Summary:** different orders and densities until the story, dial and area cards read top to bottom.
 - **Quick insight cards:** plain cards first, then glass and gradient versions. I picked one and made it taller, with more room to breathe.
-- **The reveal:** a few takes inspired by how Superpower and Whoop open their results. I chose one and moved it into Lumeria's colours (an evergreen dusk), tried several ring patterns and kept the fine halo ticks.
+- **The reveal:** a few takes inspired by how Apple Health and Whoop open their results. I chose one and moved it into Lumeria's colours (an evergreen dusk), tried several ring patterns and kept the fine halo ticks.
 - **Streak card:** three versions. I kept the simplest, a single vertical glass card with a gentle parallax tilt.
 - **Things I dropped:** I thought about a "skin age" card and left it out. It's a single number that sounds like a medical judgement, which goes against the rest of the report.
 
