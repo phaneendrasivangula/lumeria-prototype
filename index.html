@@ -528,7 +528,48 @@ a { color: inherit; text-decoration: none; }
     render(curTab !== oldTab);
     window.scrollTo(0, o.y || 0); onScroll(); lastY = window.scrollY; travel = 0; dock.classList.remove('small');
     if (g) { var shared = hadDock && !dock.hidden; if (shared && g._dock) { g._dock.remove(); g._dock = null; } transition(kind, g, shared); }
+    if (name === 'FlSummary' && !o.inst) ringsIn(o.kind === 'reveal' ? 260 : kind === 'none' ? 120 : 200);
     if (name === 'FlLoading') { loadingFx(); timer = setTimeout(function () { if (current.name === 'FlLoading') go('FlSummary', { kind: 'reveal', replace: true }); }, 1700); }
+  }
+
+  // ---------- the dial draws itself in when the report opens, like the Fitness rings: outer ring first, each ring left to right,
+  // then the area caps and trip/period markers settle in and the score counts up ----------
+  function ringsIn(lead) {
+    if (RM) return;
+    var svg = app.querySelector('svg[aria-label="Areas on the dial"]'); if (!svg || !svg.animate) return;
+    var wrap = svg.parentNode, segs = [];
+    Array.prototype.forEach.call(svg.querySelectorAll('path'), function (p) {
+      var st = p.getAttribute('stroke') || '', d = p.getAttribute('d') || '';
+      if (!st || st === 'none' || /track/.test(st) || /^rgba\(46,42,36/.test(st)) return;   // tracks stay put
+      var m = d.match(/^M\s*([\d.]+)\s+([\d.]+)\s*A\s*([\d.]+)/); if (!m) return;
+      var r = +m[3], x = +m[1];
+      segs.push({ p: p, r: r, f: Math.max(0, Math.min(1, (x - (181 - r)) / (2 * r))) });
+    });
+    var radii = segs.map(function (o) { return Math.round(o.r); }).filter(function (v, i, a) { return a.indexOf(v) === i; }).sort(function (a, b) { return b - a; });
+    segs.forEach(function (o) {
+      var len = o.p.getTotalLength ? o.p.getTotalLength() : 0; if (!len) return;
+      var ring = radii.indexOf(Math.round(o.r));
+      o.p.style.strokeDasharray = len + ' ' + len;
+      o.p.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }],
+        { duration: 260 + Math.min(420, len * 3), delay: lead + ring * 150 + o.f * 620, easing: EASE, fill: 'backwards' });
+    });
+    var end = lead + radii.length * 150 + 620;
+    var pops = Array.prototype.filter.call(wrap.querySelectorAll('[data-icon^="area-"], span[title]'), function (el) { return wrap.contains(el); });
+    pops.forEach(function (el, i) {
+      var t = el.closest('span[title]') || el.parentNode;
+      t.animate([{ opacity: 0, transform: (t.style.transform || '') + ' scale(0.6)' }, { opacity: 1, transform: (t.style.transform || '') + ' scale(1)' }],
+        { duration: 420, delay: end - 200 + i * 60, easing: 'cubic-bezier(0.34, 1.4, 0.64, 1)', fill: 'backwards' });
+    });
+    var num = Array.prototype.find.call(wrap.parentNode.querySelectorAll('span, div'), function (el) { return /font-size: 64px/.test(el.getAttribute('style') || '') && /^\d+$/.test(el.textContent.trim()); });
+    if (num) {
+      var target = +num.textContent.trim(), t0 = performance.now() + lead, dur = end - lead;
+      num.textContent = '0';
+      (function tick(now) {
+        var k = Math.max(0, Math.min(1, (now - t0) / dur)), e = 1 - Math.pow(1 - k, 3);
+        num.textContent = String(Math.round(target * e));
+        if (k < 1 && num.isConnected) requestAnimationFrame(tick); else num.textContent = String(target);
+      })(performance.now());
+    }
   }
   var ignorePop = 0;
   // Go back to `target` if it's further down the stack (or one step back without a target), playing the reverse of how we came.
