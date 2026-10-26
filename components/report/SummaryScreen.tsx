@@ -6,6 +6,7 @@ import { METRIC_COPY } from "@/lib/format";
 import type { SkinReport } from "@/lib/types";
 import { buildCards } from "@/lib/story/cards";
 import { buildDial } from "@/lib/story/dial";
+import { buildStreak } from "@/lib/story/streak";
 import { areaHref, buildSummary, type Suggestion } from "@/lib/story/summary";
 import { useReport } from "@/lib/useReport";
 import { AreaCards } from "./AreaCards";
@@ -15,6 +16,7 @@ import { FirstScan } from "./FirstScan";
 import { Headline, QuickLink, TopInsight, WelcomeBack } from "./Highlights";
 import { ReportSheets, type SheetState } from "./ReportSheets";
 import { Reveal, RevealLoading } from "./Reveal";
+import { StreakCard, type StreakStyle } from "./StreakCard";
 import { Routine } from "./Routine";
 import { Screen, useScrolledPast } from "./Screen";
 import { EmptyState, ErrorState, LoadingState, NotFoundState } from "./States";
@@ -28,13 +30,13 @@ import s from "./SummaryScreen.module.css";
 const REVEALED = new Set<string>();
 
 /** /report/:id — the monthly Summary. Fetches like a real client and shows loading, error and not-found states. */
-export function SummaryScreen({ id, fail }: { id: string; fail: boolean }) {
+export function SummaryScreen({ id, fail, streakLook = "a" }: { id: string; fail: boolean; streakLook?: StreakStyle }) {
   const { state, retry } = useReport(id, fail);
   // On a fresh load the wait happens on the reveal's own evergreen screen, so loading flows straight into the reveal
   // (no summary-shaped skeleton in between). Coming back from an area page, the summary skeleton shows instead.
   const [dusk] = useState(() => !REVEALED.has(id));
   const empty = state.status === "ready" && !state.report.scans?.length;
-  if (state.status === "ready" && !empty) return <Summary id={id} report={state.report} />;
+  if (state.status === "ready" && !empty) return <Summary id={id} report={state.report} streakLook={streakLook} />;
   if (state.status === "loading" && dusk) return <RevealLoading />;
   return (
     <Screen header={<TitleBar title="Monthly Report" />} tabs={{ id, active: "report" }}>
@@ -46,7 +48,7 @@ export function SummaryScreen({ id, fail }: { id: string; fail: boolean }) {
   );
 }
 
-function Summary({ id, report }: { id: string; report: SkinReport }) {
+function Summary({ id, report, streakLook }: { id: string; report: SkinReport; streakLook: StreakStyle }) {
   const summary = useMemo(() => buildSummary(report), [report]);
   const { story, period } = summary;
   const dial = useMemo(
@@ -92,7 +94,7 @@ function Summary({ id, report }: { id: string; report: SkinReport }) {
       tabs={{ id, active: "report", progressHref }}
     >
       <div key={phase === "reveal" ? "waiting" : "shown"} className={s.stage} data-phase={phase}>
-        <Body id={id} report={report} summary={summary} dial={dial} cards={cards} sheet={sheet} setSheet={setSheet} hrefFor={hrefFor} />
+        <Body id={id} report={report} summary={summary} dial={dial} cards={cards} sheet={sheet} setSheet={setSheet} hrefFor={hrefFor} streakLook={streakLook} />
       </div>
       {phase !== "done" && (
         <Reveal summary={summary} leaving={phase === "enter"} onDone={done} cards={cards.length} onCards={() => leave(() => setSheet({ kind: "cards" }))} />
@@ -110,6 +112,7 @@ function Body({
   sheet,
   setSheet,
   hrefFor,
+  streakLook,
 }: {
   id: string;
   report: SkinReport;
@@ -119,8 +122,11 @@ function Body({
   sheet: SheetState;
   setSheet: (s: SheetState) => void;
   hrefFor: (area: string) => string;
+  streakLook: StreakStyle;
 }) {
   const toast = useToast();
+  const streak = useMemo(() => buildStreak(summary), [summary]);
+  const streakCard = <StreakCard streak={streak} look={streakLook} onMore={() => toast("Your streak history is coming to the Lumeria app")} />;
   const { story } = summary;
   const explain = (f: (typeof summary.findings)[number]) => setSheet({ kind: "lumi", topic: { script: f.lumi, findingId: f.id } });
   const showData = (f: (typeof summary.findings)[number]) => setSheet({ kind: "evidence", id: f.id });
@@ -166,6 +172,7 @@ function Body({
       <>
         <Period>{summary.period.label}</Period>
         <FirstScan summary={summary} onInfo={() => setSheet({ kind: "guide" })} onPlan={() => toast("Reminders are set in the Lumeria app")} />
+        {streakCard}
         {sheets}
       </>
     );
@@ -196,6 +203,8 @@ function Body({
         </section>
       )}
       <TrustNote>{summary.trustNote}</TrustNote>
+
+      {streakCard}
 
       {summary.timeline.length > 0 && (
         <section aria-labelledby="events-title">

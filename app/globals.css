@@ -192,6 +192,17 @@
   --card-row: rgba(255, 255, 255, 0.66);
   --clay-bar: #c2775f;
   --photo-tag: rgba(20, 36, 26, 0.55);
+
+  /* the streak card */
+  --streak-a1: #fffaf1;
+  --streak-a2: #f6ead6;
+  --streak-a3: #ecd8b8;
+  --streak-c1: #f3f7f1;
+  --streak-sun-light: rgba(255, 255, 255, 0.9);
+  --streak-sun-gold: rgba(243, 217, 164, 0.42);
+  --streak-dot-empty: rgba(46, 42, 36, 0.12);
+  --streak-edge: inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 0 0 0.5px rgba(255, 255, 255, 0.5);
+  --streak-shadow: 0 24px 48px rgba(80, 56, 20, 0.16), 0 4px 12px rgba(80, 56, 20, 0.08);
   --photo-line-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
 
   --serif: "EB Garamond", Georgia, "Times New Roman", serif;

@@ -28,6 +28,7 @@ lib/
                                   evidence (chart windows, groups, photos) and a scripted Lumi answer
     summary.ts                    The Summary screen as data: headline, top insight, areas, timeline, routine,
                                   suggestions, welcome-back, trust note
+    streak.ts                     The scanning streak from the scan days: days in a row, best run, days scanned
     cards.ts                      Quick insights: the month in up to four cards (the month, two findings, the next
                                   step), built from the Summary; none for a first scan
     dial.ts                       The dial: one ring per area, one mark per scan, products, trip/cycle markers
@@ -40,6 +41,7 @@ components/report/
   Reveal                          The screen between loading and the report: one number, one sentence, the ring
                                   drawing itself in; "See your report" or the quick-insight cards. RevealLoading is
                                   its loading state, so the first open goes loading → reveal → report without a jump
+  StreakCard                      The streak as a layered glass card with the Lumeria sun; ?streak=b|c for the other looks
   QuickInsights                   The swipeable cards (scroll-snap, arrows, dots), inside the report's page sheet
   Screen, TabBar, TitleBar        Phone column, morning wash, frosted pinned header, floating glass tab bar
   Dial, Highlights, AreaCards, Findings, Timeline, Routine, Suggestions, FirstScan   Summary sections

@@ -5,6 +5,7 @@ import jordanJson from "@/data/reports/jordan.json";
 import samJson from "@/data/reports/sam.json";
 import type { SkinReport } from "../types";
 import { buildCards } from "./cards";
+import { buildStreak } from "./streak";
 import { buildSummary } from "./summary";
 
 const cardsFor = (r: unknown) => buildCards(buildSummary(r as SkinReport));
@@ -36,5 +37,18 @@ describe("quick-insight cards", () => {
 
   it("has no cards for a first scan: there's no month to tell yet", () => {
     expect(cardsFor(jordanJson)).toEqual([]);
+  });
+});
+
+
+describe("streak", () => {
+  const streakFor = (r: unknown) => buildStreak(buildSummary(r as SkinReport));
+  it("counts Noor's month from her scan days: 25 of 30, a best run of 7, and 3 in a row to finish", () => {
+    const s = streakFor(noorJson);
+    expect([s.days, s.total, s.best, s.current]).toEqual([25, 30, 7, 3]);
+    expect(s.marks.filter(Boolean).length).toBe(25);
+  });
+  it("starts Jordan at day 1", () => {
+    expect(streakFor(jordanJson).current).toBe(1);
   });
 });
