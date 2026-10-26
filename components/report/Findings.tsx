@@ -44,10 +44,10 @@ export function Findings({
               </button>
               {chips && (
                 <div className={s.actions}>
-                  <ChipButton icon={variant === "summary" ? "flare" : undefined} onClick={() => onExplain(f)} aria-label={`Explain: ${f.title}`}>
+                  <ChipButton icon="flare" onClick={() => onExplain(f)} aria-label={`Explain: ${f.title}`}>
                     Explain
                   </ChipButton>
-                  <ChipButton onClick={() => onShowData(f)} aria-label={`Show data: ${f.title}`}>
+                  <ChipButton icon="description" onClick={() => onShowData(f)} aria-label={`Show data: ${f.title}`}>
                     Show data
                   </ChipButton>
                 </div>
