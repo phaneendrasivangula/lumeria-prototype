@@ -40,7 +40,7 @@ Loading (on first open, the reveal's own screen with a light travelling round th
 ## Extra data I assumed
 
 - **Lumi chat:** scripted answers built from the person's own scans and notes, to show what explaining a pattern could feel like. A real version would need an LLM with strict no-medical-claims guardrails; a test already scans every generated sentence for diagnosis words.
-- **Streaks (prototype only):** worked out from the scan dates and shown after a scan. Nothing extra is collected.
+- **Streaks:** worked out from the scan dates only (the streak card in the report, and the post-scan streak in the prototype). Nothing extra is collected.
 - **Trip and place photos (prototype only):** illustrative images of Phoenix and of oily skin, used on the pattern orbs.
 - Everything else in the Next.js report comes from what the API returns. Actions with no backend yet (reminders, the 2-week test, adding a skin type) show a short confirmation instead.
 
