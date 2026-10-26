@@ -62,6 +62,19 @@ a { color: inherit; text-decoration: none; }
 /* the scan button is the same liquid glass, tinted forest as the primary action */
 .navscan .lglass { background: linear-gradient(180deg, rgba(64,96,72,0.86) 0%, rgba(47,74,53,0.94) 100%); }
 .navscan svg { width: 28px; height: 28px; fill: #FBF8F0; }
+
+/* the bar tucks in while you read (scrolling down) and comes back when you scroll up or reach the end, as iOS 26 tab bars do */
+.navrow { transition: width 0.5s cubic-bezier(0.32, 0.72, 0, 1); }
+.navpill { transition: height 0.5s cubic-bezier(0.32, 0.72, 0, 1); }
+.navpill .lb { display: block; max-height: 12px; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.25s ease; }
+.navscan { transition: width 0.5s cubic-bezier(0.32, 0.72, 0, 1), height 0.5s cubic-bezier(0.32, 0.72, 0, 1); }
+.navscan svg { transition: width 0.4s ease, height 0.4s ease; }
+.dock.small .navrow { width: 292px; }
+.dock.small .navpill { height: 48px; }
+.dock.small .navpill .lb { max-height: 0; opacity: 0; }
+.dock.small .navscan { width: 48px; height: 48px; }
+.dock.small .navscan svg { width: 24px; height: 24px; }
+@media (prefers-reduced-motion: reduce) { .navrow, .navpill, .navpill .lb, .navscan, .navscan svg { transition: none; } }
 .navpill a:focus-visible, .navscan:focus-visible { outline: 2px solid var(--forest); outline-offset: -4px; border-radius: 100px; }
 /* pinned top header: the screen's own title row, on frosted glass so content scrolls under it */
 .topdock { position: fixed; left: 0; right: 0; top: 0; z-index: 45; pointer-events: none; }
@@ -199,7 +212,7 @@ a { color: inherit; text-decoration: none; }
   }
   function dockHTML() {
     return '<div class="navrow"><div class="navpill"><span class="lglass" aria-hidden="true"></span><span class="navind" aria-hidden="true"></span>' + TABS.map(function (t) {
-      return '<a href="' + t[2] + '.dc.html" data-tab="' + t[0] + '"><span class="ic"><span class="off">' + D.nav[t[0]] + '</span><span class="on">' + D.nav[t[0] + '-on'] + '</span></span>' + t[1] + '</a>';
+      return '<a href="' + t[2] + '.dc.html" data-tab="' + t[0] + '"><span class="ic"><span class="off">' + D.nav[t[0]] + '</span><span class="on">' + D.nav[t[0] + '-on'] + '</span></span><span class="lb">' + t[1] + '</span>' + '</a>';
     }).join('') + '</div><a class="navscan" href="FlScan.dc.html" aria-label="Scan"><span class="lglass" aria-hidden="true"></span>' + D.nav.scan + '</a></div>';
   }
   function setTab(root, tab, bounce) {
@@ -243,6 +256,15 @@ a { color: inherit; text-decoration: none; }
     topbar.style.height = (col.full + (116 - col.full) * ease) + 'px';
   }
   window.addEventListener('scroll', onScroll, { passive: true });
+  var lastY = 0, travel = 0;
+  function navSize() {
+    var y = window.scrollY, dy = y - lastY; lastY = y;
+    var atEnd = window.innerHeight + y >= document.documentElement.scrollHeight - 40;
+    travel = (dy > 0) === (travel > 0) ? travel + dy : dy;   // distance moved in the current direction
+    if (y < 60 || atEnd || travel < -24) dock.classList.remove('small');
+    else if (travel > 24) dock.classList.add('small');
+  }
+  window.addEventListener('scroll', navSize, { passive: true });
   function findHdr(root, name) {
     if (!PIN[name] || !root) return null;
     return Array.prototype.find.call(root.children, function (c) {
@@ -452,7 +474,7 @@ a { color: inherit; text-decoration: none; }
     if (o.tab) curTab = o.tab; else if (o.restoreTab !== undefined) curTab = o.restoreTab; else if (ROOTS[name]) curTab = ROOTS[name];
     current = { name: name, inst: o.inst || new s.Comp({}), tmpl: s.tmpl, kind: o.enterKind || (o.replace ? current.kind : kind) };
     render(curTab !== oldTab);
-    window.scrollTo(0, o.y || 0); onScroll();
+    window.scrollTo(0, o.y || 0); onScroll(); lastY = window.scrollY; travel = 0; dock.classList.remove('small');
     if (g) { var shared = hadDock && !dock.hidden; if (shared && g._dock) { g._dock.remove(); g._dock = null; } transition(kind, g, shared); }
     if (name === 'FlLoading') { loadingFx(); timer = setTimeout(function () { if (current.name === 'FlLoading') go('FlSummary', { kind: 'reveal', replace: true }); }, 1700); }
   }
