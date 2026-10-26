@@ -28,7 +28,7 @@ describe("summary: noor", () => {
 
   it("makes the switch to azelaic acid the top insight, with its real numbers", () => {
     expect(s.top?.title).toBe("Calmer since Oct 13");
-    expect(s.top?.body).toBe("Your left cheek’s redness score averaged 76 since Oct 13, up from 56 in the retinol weeks.");
+    expect(s.top?.body).toBe("Redness averaged 76, up from 56 on retinol.");
     // what we saw, then what may be related: never a cause
     expect(s.top?.related).toBe("You started azelaic acid that day, a week after the Phoenix trip.");
     expect(s.top?.confidence).toBe("Likely");

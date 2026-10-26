@@ -14,7 +14,7 @@ import { Findings } from "./Findings";
 import { FirstScan } from "./FirstScan";
 import { Headline, QuickLink, TopInsight, WelcomeBack } from "./Highlights";
 import { ReportSheets, type SheetState } from "./ReportSheets";
-import { Reveal } from "./Reveal";
+import { Reveal, RevealLoading } from "./Reveal";
 import { Routine } from "./Routine";
 import { Screen, useScrolledPast } from "./Screen";
 import { EmptyState, ErrorState, LoadingState, NotFoundState } from "./States";
@@ -24,11 +24,18 @@ import { Period, TitleBar } from "./TitleBar";
 import { SectionHead, TrustNote, useToast } from "./ui";
 import s from "./SummaryScreen.module.css";
 
+/** Reports whose reveal has been seen since this page loaded (a full reload shows it again). */
+const REVEALED = new Set<string>();
+
 /** /report/:id — the monthly Summary. Fetches like a real client and shows loading, error and not-found states. */
 export function SummaryScreen({ id, fail }: { id: string; fail: boolean }) {
   const { state, retry } = useReport(id, fail);
+  // On a fresh load the wait happens on the reveal's own evergreen screen, so loading flows straight into the reveal
+  // (no summary-shaped skeleton in between). Coming back from an area page, the summary skeleton shows instead.
+  const [dusk] = useState(() => !REVEALED.has(id));
   const empty = state.status === "ready" && !state.report.scans?.length;
   if (state.status === "ready" && !empty) return <Summary id={id} report={state.report} />;
+  if (state.status === "loading" && dusk) return <RevealLoading />;
   return (
     <Screen header={<TitleBar title="Monthly Report" />} tabs={{ id, active: "report" }}>
       {state.status === "loading" && <LoadingState />}
@@ -38,9 +45,6 @@ export function SummaryScreen({ id, fail }: { id: string; fail: boolean }) {
     </Screen>
   );
 }
-
-/** Reports whose reveal has been seen since this page loaded (a full reload shows it again). */
-const REVEALED = new Set<string>();
 
 function Summary({ id, report }: { id: string; report: SkinReport }) {
   const summary = useMemo(() => buildSummary(report), [report]);

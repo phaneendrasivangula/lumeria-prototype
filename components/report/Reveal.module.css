@@ -38,7 +38,14 @@
 .top {
   flex-shrink: 0;
   text-align: center;
-  animation: rise 0.8s var(--ease) 0.1s both;
+}
+
+/* the logo and the ring arrive with the loading screen, and stay put as it becomes the reveal */
+.arrive {
+  animation: rise 0.8s var(--ease) 0.05s both;
+}
+.ticksIn {
+  animation: fade 1s ease both;
 }
 
 .logo {
@@ -60,8 +67,8 @@
 
 .hero {
   position: relative;
-  flex: 1 1 auto;
-  min-height: 220px;
+  flex: none;
+  height: clamp(220px, 40dvh, 330px); /* the same ring on the loading screen and the reveal */
   margin: 10px 0;
 }
 
@@ -83,9 +90,7 @@
   stroke-width: 1;
   transform-box: fill-box;
   transform-origin: center;
-  animation:
-    fade 1.4s ease 0.15s both,
-    spin 120s linear infinite;
+  animation: spin 120s linear infinite;
 }
 
 .track {
@@ -161,6 +166,7 @@
 
 .words {
   flex-shrink: 0;
+  margin-top: auto;
   padding: 0 30px 22px;
   text-align: center;
   animation: rise 0.9s var(--ease) 1.25s both;
@@ -235,6 +241,36 @@
   outline-offset: 3px;
 }
 
+/* loading: a short arc of light travels round the empty ring */
+.seek {
+  fill: none;
+  stroke: var(--gold-core);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-dasharray: 14 86;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: spin 1.6s linear infinite;
+  filter: drop-shadow(0 0 6px var(--gold-glow));
+}
+
+.gather {
+  margin: 0;
+  padding-top: 18px; /* about where the reveal's headline sits */
+  font-family: var(--serif);
+  font-size: 26px;
+  line-height: 36px;
+}
+
+.wordsNow {
+  animation: rise 0.6s var(--ease) 0.15s both;
+}
+
+.ctasSpace {
+  flex-shrink: 0;
+  height: 104px; /* the button and the link under it */
+}
+
 @keyframes draw {
   to {
     stroke-dashoffset: 0;
@@ -290,14 +326,17 @@
 
 @media (prefers-reduced-motion: reduce) {
   .sun,
-  .top,
+  .arrive,
+  .ticksIn,
   .ticks,
   .arc,
   .dot,
   .dotGlow,
   .number,
   .words,
-  .ctas {
+  .ctas,
+  .wordsNow,
+  .seek {
     animation: none;
   }
   .arc {

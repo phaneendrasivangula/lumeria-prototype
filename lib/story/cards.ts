@@ -10,7 +10,12 @@ import type { Finding, Tone } from "./types";
 export type CardAction =
   | { label: string; icon: "flare"; kind: "lumi"; findingId: string }
   | { label: string; icon: "description"; kind: "evidence"; findingId: string }
-  | { label: string; icon: "science" | "center_focus_weak" | "edit_note" | "person" | "description"; kind: "suggestion"; suggestionId: string };
+  | {
+      label: string;
+      icon: "science" | "center_focus_weak" | "edit_note" | "person" | "description";
+      kind: "suggestion";
+      suggestionId: string;
+    };
 
 export type CardRow =
   | { kind: "bar"; label: string; detail: string; frac: number; tone: "good" | "watch" }
@@ -79,12 +84,25 @@ function findingCard(f: Finding, tint: QuickCard["tint"]): QuickCard {
     const b = avg(f.groups.b.values);
     const top = Math.max(a, b, 1);
     const word = f.metric ? METRIC_MOVE[f.metric].short : "score";
-    rows.push({ kind: "bar", label: f.groups.a.label, detail: `${word} ${a}`, frac: a / top, tone: f.groups.a.tone === "alert" ? "watch" : "good" });
-    rows.push({ kind: "bar", label: f.groups.b.label, detail: `${word} ${b}`, frac: b / top, tone: f.groups.b.tone === "good" ? "good" : "watch" });
+    rows.push({
+      kind: "bar",
+      label: f.groups.a.label,
+      detail: `${word} ${a}`,
+      frac: a / top,
+      tone: f.groups.a.tone === "alert" ? "watch" : "good",
+    });
+    rows.push({
+      kind: "bar",
+      label: f.groups.b.label,
+      detail: `${word} ${b}`,
+      frac: b / top,
+      tone: f.groups.b.tone === "good" ? "good" : "watch",
+    });
   } else if (f.areas.length > 1) {
     rows.push({ kind: "text", label: "Areas", value: f.areas.join(", ") });
   }
-  if (f.confidence) rows.push({ kind: "text", label: "How sure", value: f.confidence === "Likely" ? "Likely, not certain" : f.confidence, tone: f.tone });
+  if (f.confidence)
+    rows.push({ kind: "text", label: "How sure", value: f.confidence === "Likely" ? "Likely, not certain" : f.confidence, tone: f.tone });
   return {
     id: f.id,
     tint,
@@ -130,7 +148,9 @@ export function buildCards(summary: Summary): QuickCard[] {
       body: brief(next.body),
       rows: [],
       actions: [
-        ...(next.findingId ? [{ label: "Show data", icon: "description" as const, kind: "evidence" as const, findingId: next.findingId }] : []),
+        ...(next.findingId
+          ? [{ label: "Show data", icon: "description" as const, kind: "evidence" as const, findingId: next.findingId }]
+          : []),
         { label: next.cta, icon: SUGGESTION_ICON[next.icon], kind: "suggestion", suggestionId: next.id },
       ],
     });

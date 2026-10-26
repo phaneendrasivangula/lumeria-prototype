@@ -22,7 +22,7 @@ The same code handles the edge cases:
 - **Jordan:** one scan. The page becomes a welcome that shows what more scans will unlock.
 - **Sam:** unsorted scans, unmeasured oil balance, a missing photo and no skin type. Missing values read "Not measured" and charts skip them.
 
-Loading (a breathing dial while the slow API answers), error with retry (`?fail=1`), not found, and empty (a report with no scans yet) are all designed states. Cards show one sentence each; the full reading is one tap away in Show data and Explain.
+Loading (on first open, the reveal's own screen with a light travelling round the empty ring, so loading flows straight into the reveal; elsewhere a breathing dial while the slow API answers), error with retry (`?fail=1`), not found, and empty (a report with no scans yet) are all designed states. Cards show one sentence each; the full reading is one tap away in Show data and Explain.
 
 `/prototype/` is the same design as an interactive app, beyond what the API covers: Home, the scan sheet, the post-scan streak, reminders, the dermatologist export and the monthly-report notification, each built for every person. The code tour is in the README.
 

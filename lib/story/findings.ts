@@ -187,7 +187,7 @@ export function buildFindings(report: SkinReport, story: Story): Finding[] {
       confidence: up ? "Likely" : "Possible",
       tone: up ? "good" : "watch",
       title: up ? `${METRIC_MOVE[m].adj} since ${fmtDay(next.startDate)}` : `${cap(METRIC_COPY[m].label)} slipped after ${fmtDay(next.startDate)}`,
-      body: `Your ${area.toLowerCase()}’s ${METRIC_COPY[m].label.toLowerCase()} score averaged ${a} since ${fmtDay(next.startDate)}, ${up ? "up" : "down"} from ${b} in the ${plainName(s)} weeks.`,
+      body: `${cap(METRIC_COPY[m].label)} averaged ${a}, ${up ? "up" : "down"} from ${b} on ${plainName(s)}.`,
       related: trip
         ? `You started ${plainName(next)} that day, ${gapWords(dayNumber(next.startDate) - dayNumber(trip.to))} after the ${trip.city} trip.`
         : `You started ${plainName(next)} that day.`,

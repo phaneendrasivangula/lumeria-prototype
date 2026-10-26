@@ -38,7 +38,8 @@ lib/
 components/report/
   SummaryScreen, AreaScreen       Page composition and state switching
   Reveal                          The screen between loading and the report: one number, one sentence, the ring
-                                  drawing itself in; "See your report" or the quick-insight cards
+                                  drawing itself in; "See your report" or the quick-insight cards. RevealLoading is
+                                  its loading state, so the first open goes loading → reveal → report without a jump
   QuickInsights                   The swipeable cards (scroll-snap, arrows, dots), inside the report's page sheet
   Screen, TabBar, TitleBar        Phone column, morning wash, frosted pinned header, floating glass tab bar
   Dial, Highlights, AreaCards, Findings, Timeline, Routine, Suggestions, FirstScan   Summary sections

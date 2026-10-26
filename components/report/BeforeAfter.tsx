@@ -25,48 +25,48 @@ export function BeforeAfter({ points, area }: { points: DayPoint[]; area: string
 
   return (
     <section aria-label="Before and after">
-    <Card variant="glass" className={s.card}>
-      <div className={s.head}>
-        <h3 className={s.title}>Before and after</h3>
-        <span className={s.hint}>Drag to compare</span>
-      </div>
-      <div className={s.frame}>
-        {/* eslint-disable-next-line @next/next/no-img-element -- scan photos come from the API as plain URLs */}
-        <img className={s.photo} src={photoOf(b.scan)!} alt={`${area} on ${fmtDay(b.day)}`} />
-        <div className={s.before} style={{ clipPath: `inset(0 ${100 - at}% 0 0)` }}>
-          {/* eslint-disable-next-line @next/next/no-img-element -- scan photos come from the API as plain URLs */}
-          <img className={s.photo} src={photoOf(a.scan)!} alt={`${area} on ${fmtDay(a.day)}`} />
+      <Card variant="glass" className={s.card}>
+        <div className={s.head}>
+          <h3 className={s.title}>Before and after</h3>
+          <span className={s.hint}>Drag to compare</span>
         </div>
-        <span className={s.line} style={{ left: `${at}%` }} aria-hidden />
-        <span className={s.handle} style={{ left: `${at}%` }} aria-hidden>
-          <Icon name="swap_horiz" size={20} />
-        </span>
-        <span className={s.tag} data-side="left">
-          {label(a)}
-        </span>
-        <span className={s.tag} data-side="right">
-          {label(b)}
-        </span>
-        <input
-          className={s.range}
-          type="range"
-          min={5}
-          max={95}
-          value={at}
-          onChange={(e) => setAt(Number(e.target.value))}
-          aria-label={`Compare ${fmtDay(a.day)} with ${fmtDay(b.day)}`}
-        />
-      </div>
-      {moved.length > 0 && (
-        <ul className={s.chips}>
-          {moved.map((d) => (
-            <li key={d.m} className={s.chip} data-good={d.y > d.x ? "" : undefined}>
-              {METRIC_MOVE[d.m].tile} {d.x} → {d.y} · {d.y > d.x ? METRIC_MOVE[d.m].up : METRIC_MOVE[d.m].down}
-            </li>
-          ))}
-        </ul>
-      )}
-    </Card>
+        <div className={s.frame}>
+          {/* eslint-disable-next-line @next/next/no-img-element -- scan photos come from the API as plain URLs */}
+          <img className={s.photo} src={photoOf(b.scan)!} alt={`${area} on ${fmtDay(b.day)}`} />
+          <div className={s.before} style={{ clipPath: `inset(0 ${100 - at}% 0 0)` }}>
+            {/* eslint-disable-next-line @next/next/no-img-element -- scan photos come from the API as plain URLs */}
+            <img className={s.photo} src={photoOf(a.scan)!} alt={`${area} on ${fmtDay(a.day)}`} />
+          </div>
+          <span className={s.line} style={{ left: `${at}%` }} aria-hidden />
+          <span className={s.handle} style={{ left: `${at}%` }} aria-hidden>
+            <Icon name="swap_horiz" size={20} />
+          </span>
+          <span className={s.tag} data-side="left">
+            {label(a)}
+          </span>
+          <span className={s.tag} data-side="right">
+            {label(b)}
+          </span>
+          <input
+            className={s.range}
+            type="range"
+            min={5}
+            max={95}
+            value={at}
+            onChange={(e) => setAt(Number(e.target.value))}
+            aria-label={`Compare ${fmtDay(a.day)} with ${fmtDay(b.day)}`}
+          />
+        </div>
+        {moved.length > 0 && (
+          <ul className={s.chips}>
+            {moved.map((d) => (
+              <li key={d.m} className={s.chip} data-good={d.y > d.x ? "" : undefined}>
+                {METRIC_MOVE[d.m].tile} {d.x} → {d.y} · {d.y > d.x ? METRIC_MOVE[d.m].up : METRIC_MOVE[d.m].down}
+              </li>
+            ))}
+          </ul>
+        )}
+      </Card>
     </section>
   );
 }

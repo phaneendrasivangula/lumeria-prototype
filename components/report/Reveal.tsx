@@ -20,7 +20,12 @@ function arc(v: number): string {
 
 const TICKS = Array.from({ length: 160 }, (_, i) => {
   const a = (i * 2 * Math.PI) / 160;
-  return { x1: CX + (R + 13) * Math.cos(a), y1: CY + (R + 13) * Math.sin(a), x2: CX + (R + 18) * Math.cos(a), y2: CY + (R + 18) * Math.sin(a) };
+  return {
+    x1: CX + (R + 13) * Math.cos(a),
+    y1: CY + (R + 13) * Math.sin(a),
+    x2: CX + (R + 18) * Math.cos(a),
+    y2: CY + (R + 18) * Math.sin(a),
+  };
 });
 
 /**
@@ -28,12 +33,29 @@ const TICKS = Array.from({ length: 160 }, (_, i) => {
  * score, then the words and the button rise. "See your report" (or Escape) opens the summary underneath; the quieter
  * link opens the quick-insight cards over it. Still and complete under prefers-reduced-motion.
  */
-export function Reveal({ summary, onDone, cards = 0, onCards }: { summary: Summary; onDone: () => void; cards?: number; onCards?: () => void }) {
+export function Reveal({
+  summary,
+  onDone,
+  cards = 0,
+  onCards,
+}: {
+  summary: Summary;
+  onDone: () => void;
+  cards?: number;
+  onCards?: () => void;
+}) {
   const titleId = useId();
   const box = useRef<HTMLDivElement>(null);
   const score = summary.score ?? 0;
-  const end = { x: CX + R * Math.sin((2 * Math.PI * score) / 100), y: CY - R * Math.cos((2 * Math.PI * score) / 100) };
-  const sub = summary.first ? "your starting point" : summary.delta != null && summary.delta !== 0 ? `${summary.delta > 0 ? "▲" : "▼"} ${Math.abs(summary.delta)} ${summary.since}` : `steady ${summary.since}`;
+  const end = {
+    x: CX + R * Math.sin((2 * Math.PI * score) / 100),
+    y: CY - R * Math.cos((2 * Math.PI * score) / 100),
+  };
+  const sub = summary.first
+    ? "your starting point"
+    : summary.delta != null && summary.delta !== 0
+      ? `${summary.delta > 0 ? "▲" : "▼"} ${Math.abs(summary.delta)} ${summary.since}`
+      : `steady ${summary.since}`;
 
   useEffect(() => {
     box.current?.focus({ preventScroll: true }); // into the dialog, without a focus ring on the button
@@ -112,6 +134,44 @@ export function Reveal({ summary, onDone, cards = 0, onCards }: { summary: Summa
             </button>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+/** Loading, on the reveal's own screen: the logo, an empty ring with a light travelling round it, and a plain line. */
+export function RevealLoading() {
+  return (
+    <div className={s.reveal} aria-busy="true">
+      <div className={s.sky} aria-hidden />
+      <div className={s.sun} aria-hidden />
+      <div className={s.column}>
+        <header className={`${s.top} ${s.arrive}`}>
+          {/* eslint-disable-next-line @next/next/no-img-element -- a small decorative brand mark */}
+          <img className={s.logo} src="/brand/lumeria-sun.png" alt="Lumeria" width={58} height={36} />
+          <p className={s.eyebrow}>Monthly report</p>
+        </header>
+        <div className={s.hero}>
+          <svg className={s.ring} viewBox="0 0 402 330" preserveAspectRatio="xMidYMid meet" aria-hidden>
+            <g className={s.ticksIn}>
+              <g className={s.ticks}>
+                {TICKS.map((t, i) => (
+                  <line key={i} x1={t.x1.toFixed(1)} y1={t.y1.toFixed(1)} x2={t.x2.toFixed(1)} y2={t.y2.toFixed(1)} />
+                ))}
+              </g>
+            </g>
+            <circle cx={CX} cy={CY} r={R} className={s.track} />
+            <circle cx={CX} cy={CY} r={R} className={s.seek} pathLength={100} />
+          </svg>
+        </div>
+        {/* the same space as the reveal's words and buttons, so the ring doesn't move when the month arrives */}
+        <div className={`${s.words} ${s.wordsNow}`}>
+          <p className={s.gather} role="status">
+            Gathering your month…
+          </p>
+          <p className={s.subhead}>This only takes a moment</p>
+        </div>
+        <div className={s.ctasSpace} aria-hidden />
       </div>
     </div>
   );

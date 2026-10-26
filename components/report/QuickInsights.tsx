@@ -45,7 +45,13 @@ export function QuickInsights({ cards, onAction }: { cards: QuickCard[]; onActio
   return (
     <div className={s.wrap} onKeyDown={(e) => (e.key === "ArrowRight" ? go(i + 1) : e.key === "ArrowLeft" ? go(i - 1) : undefined)}>
       <div className={s.stage}>
-        <div ref={rail} className={s.rail} tabIndex={0} aria-roledescription="carousel" aria-label="Quick insights: use the arrow keys or swipe">
+        <div
+          ref={rail}
+          className={s.rail}
+          tabIndex={0}
+          aria-roledescription="carousel"
+          aria-label="Quick insights: use the arrow keys or swipe"
+        >
           {cards.map((c, k) => (
             <article
               key={c.id}
