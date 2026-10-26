@@ -85,6 +85,7 @@ I started in Figma, laying out the screens and card ideas I wanted to try. Then 
 For anyone curious, this is everything that came before the final screens. Most of it lives on my design canvas: close to 490 screens across all the rounds.
 
 **Research and framing**
+
 1. **Data from the prompt.** I went through all four people's scans, scores and notes, and wrote down what each month actually looked like.
 2. **User research.** I talked with two friends about how they track their skin and what they'd want from a monthly report, then grouped what I heard into themes.
 3. **Secondary research.** I read up on how people talk about skin changes, and on how health and fitness apps report progress.
