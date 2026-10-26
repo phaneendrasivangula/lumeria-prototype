@@ -74,6 +74,13 @@ a { color: inherit; text-decoration: none; }
   box-shadow: inset 0 -0.5px 0 rgba(255,255,255,0.9), 0 0.5px 0 #E2E2E2, 0 8px 15px rgba(0,0,0,0.03); }
 .topdock .glass::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.95) 50%, rgba(255,255,255,0) 100%); }
 .topdock .bar > * { pointer-events: auto; }
+/* Summary, scrolled: the dial folds into the top bar as a compact row (after Whoop): mini rings, the score and its change, each area's glyph and score */
+.mini { position: absolute; left: 18px; right: 18px; top: 60px; height: 44px; display: flex; align-items: center; gap: 9px; opacity: 0; pointer-events: none; transform-origin: left center; cursor: pointer; }
+.mini.on { pointer-events: auto; }
+.mini .mrings { width: 50px; height: 28px; flex-shrink: 0; display: block; }
+.mini .mscore { font: 400 28px/1 'EB Garamond', Georgia, serif; color: #2E2620; letter-spacing: -0.01em; }
+.mini .mareas { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.mini .marea { display: flex; align-items: center; gap: 5px; font: 600 14px/1 Geist, -apple-system, sans-serif; color: #2E2A24; font-variant-numeric: tabular-nums; }
 [hidden] { display: none !important; }
 
 /* ---- motion, after Apple's HIG: navigation pushes from the trailing edge, modal sheets rise from the bottom,
@@ -218,7 +225,23 @@ a { color: inherit; text-decoration: none; }
     dock.style.zoom = stage.style.zoom || '';
   }
   function glassFor(y) { return String(Math.max(0, Math.min(1, (y - 4) / 36))); }
-  function onScroll() { glass.style.opacity = glassFor(window.scrollY); }
+  var col = null;   // the Summary's scroll-to-collapse header, when it's on screen
+  function onScroll() {
+    glass.style.opacity = glassFor(window.scrollY);
+    if (!col) return;
+    var z = parseFloat(stage.style.zoom) || 1, p = Math.max(0, Math.min(1, window.scrollY / (190 * z)));
+    var ease = p * p * (3 - 2 * p);
+    col.hdr.style.opacity = String(Math.max(0, 1 - p * 1.9));
+    col.hdr.style.transform = RM ? '' : 'translateY(' + (-8 * ease) + 'px)';
+    col.hdr.style.pointerEvents = p > 0.45 ? 'none' : '';
+    var q = Math.max(0, Math.min(1, (p - 0.4) / 0.6));
+    col.mini.style.opacity = String(q);
+    col.mini.style.transform = RM ? '' : 'translateY(' + (10 * (1 - q)) + 'px) scale(' + (0.92 + 0.08 * q) + ')';
+    col.mini.classList.toggle('on', q > 0.6);
+    if (!RM) { col.dial.style.transform = 'scale(' + (1 - 0.38 * ease) + ')'; }
+    col.dial.style.opacity = String(1 - 0.85 * ease);
+    topbar.style.height = (col.full + (116 - col.full) * ease) + 'px';
+  }
   window.addEventListener('scroll', onScroll, { passive: true });
   function findHdr(root, name) {
     if (!PIN[name] || !root) return null;
@@ -228,6 +251,7 @@ a { color: inherit; text-decoration: none; }
     }) || null;
   }
   function pinHeader() {
+    col = null;
     Array.prototype.slice.call(topbar.children).forEach(function (c) { if (c !== glass) c.remove(); });
     onScroll();
     var hdr = findHdr(app.firstElementChild, current.name);
@@ -237,6 +261,44 @@ a { color: inherit; text-decoration: none; }
     topbar.appendChild(hdr);   // keeps its own left / right / top, now pinned to the screen
     topbar.style.height = (bottom + 14) + 'px';
     topdock.style.zoom = stage.style.zoom || '';
+    setupCollapse(hdr, bottom + 14);
+  }
+  // Build the compact row from what the page already shows, so its numbers always match the report.
+  function setupCollapse(hdr, full) {
+    col = null;
+    if (current.name !== 'FlSummary') return;
+    var root = app.firstElementChild, ringsSvg = root && root.querySelector('svg[aria-label="Areas on the dial"]');
+    if (!ringsSvg) return;
+    var dial = ringsSvg.closest('div[style*="margin: 0 -20px"]') || ringsSvg.parentNode;
+    var big = Array.prototype.find.call(dial.querySelectorAll('span'), function (e) { return /font-size: 64px/.test(e.getAttribute('style') || ''); });
+    var score = big ? (big.firstChild && big.firstChild.nodeValue || big.textContent).trim().match(/\d+/)[0] : '';
+    var upIcon = dial.querySelector('[data-icon="ms-arrow_upward"]'), pill = upIcon && upIcon.parentNode;
+    var areas = ['cheek', 'forehead', 'chin'].map(function (k) {
+      var g = Array.prototype.find.call(root.querySelectorAll('a [data-icon="area-' + k + '"]'), function (x) { return x.closest('a[style*="height: 125px"]'); });
+      if (!g) return null;
+      var card = g.closest('a'), badge = g.parentNode, name = badge.parentNode.textContent.trim();
+      var m = card.textContent.replace(name, '').match(/\d{2}/);
+      return { k: k, badge: badge.cloneNode(true), score: m ? m[0] : '', pct: m ? +m[0] : 0 };
+    }).filter(Boolean);
+    var mini = document.createElement('div'); mini.className = 'mini'; mini.setAttribute('role', 'button');
+    mini.setAttribute('aria-label', 'Overall ' + score + '. Back to the top of your report');
+    var svg = '<svg class="mrings" viewBox="0 0 50 28" aria-hidden="true">';
+    [[22, 'cheek'], [16.5, 'forehead'], [11, 'chin']].forEach(function (rk) {
+      var r = rk[0], a = areas.filter(function (x) { return x.k === rk[1]; })[0], d = 'M' + (25 - r) + ' 25 A' + r + ' ' + r + ' 0 0 1 ' + (25 + r) + ' 25';
+      svg += '<path d="' + d + '" fill="none" stroke="#ECE6DC" stroke-width="3.6" stroke-linecap="round"></path>';
+      if (a) svg += '<path d="' + d + '" pathLength="100" stroke-dasharray="' + a.pct + ' 100" fill="none" stroke="#5F8466" stroke-width="3.6" stroke-linecap="round"></path>';
+    });
+    mini.innerHTML = svg + '</svg><span class="mscore">' + score + '</span>';
+    if (pill) { var pc = pill.cloneNode(true); pc.style.flexShrink = '0'; mini.appendChild(pc); }
+    var wrap = document.createElement('span'); wrap.className = 'mareas';
+    areas.forEach(function (a) { var s = document.createElement('span'); s.className = 'marea'; s.appendChild(a.badge); s.appendChild(document.createTextNode(a.score)); wrap.appendChild(s); });
+    mini.appendChild(wrap);
+    mini.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: RM ? 'auto' : 'smooth' }); });
+    topbar.appendChild(mini);
+    dial.style.transformOrigin = '50% 0';
+    hdr.style.transition = 'none';
+    col = { hdr: hdr, mini: mini, dial: dial, full: full };
+    onScroll();
   }
   function render(bounce) {
     var vals = current.inst.renderVals ? current.inst.renderVals() : {};
