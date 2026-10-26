@@ -39,6 +39,9 @@ export function SummaryScreen({ id, fail }: { id: string; fail: boolean }) {
   );
 }
 
+/** Reports whose reveal has been seen since this page loaded (a full reload shows it again). */
+const REVEALED = new Set<string>();
+
 function Summary({ id, report }: { id: string; report: SkinReport }) {
   const summary = useMemo(() => buildSummary(report), [report]);
   const { story, period } = summary;
@@ -48,9 +51,13 @@ function Summary({ id, report }: { id: string; report: SkinReport }) {
   );
   const cards = useMemo(() => buildCards(summary), [summary]);
   const [sheet, setSheet] = useState<SheetState>(null);
-  // The reveal opens the report once per visit: the month in one number and one sentence, then the summary.
-  const [revealed, setRevealed] = useState(false);
-  const done = useCallback(() => setRevealed(true), []);
+  // The reveal opens the report once per page load: the month in one number and one sentence, then the summary.
+  // Coming back from an area page (client-side) goes straight to the summary.
+  const [revealed, setRevealed] = useState(() => REVEALED.has(id));
+  const done = useCallback(() => {
+    REVEALED.add(id);
+    setRevealed(true);
+  }, [id]);
   const collapsed = useScrolledPast(230);
 
   const hrefFor = (area: string) => areaHref(id, area);
