@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Scan } from "./types";
 import { bandOf } from "./bands";
-import { localDay, metricWord, signed } from "./format";
+import { localDay, metricWord, signed , brief } from "./format";
 
 const scan = (takenAt: string, tz?: string) => ({ takenAt, location: tz ? { tz } : undefined }) as unknown as Scan;
 
@@ -38,5 +38,13 @@ describe("photos", () => {
     expect(photoOf(s("/scans/noor_scan_01.jpg"))).toBe("/scans/noor_scan_01.svg");
     expect(photoOf(s("/mock-photos/maya_scan_01.svg"))).toBe("/mock-photos/maya_scan_01.svg");
     expect(photoOf(s(null))).toBeNull();
+  });
+});
+
+describe("brief", () => {
+  it("keeps the first sentence and leaves the rest to Show data", () => {
+    expect(brief("Both landed the week of Oct 4. We can’t tell yet.")).toBe("Both landed the week of Oct 4.");
+    expect(brief("Hydration rose 54 → 72 on your cheek since July.")).toBe("Hydration rose 54 → 72 on your cheek since July.");
+    expect(brief("Redness was 76–83 on all 3.5 areas. Fine.")).toBe("Redness was 76–83 on all 3.5 areas.");
   });
 });

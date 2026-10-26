@@ -173,6 +173,7 @@ export function buildFindings(report: SkinReport, story: Story): Finding[] {
 
   // 1. A product swap. If the scans after the switch are better, that leads the report ("Likely");
   //    when a trip overlaps the old product, we say plainly that we can't separate the two.
+  const gapWords = (n: number) => (n >= 6 && n <= 8 ? "a week" : `${n} day${n === 1 ? "" : "s"}`);
   const swap = findSwap(story, products);
   if (swap) {
     const { stopped: s, next, metric: m, after, during, trip } = swap;
@@ -185,8 +186,11 @@ export function buildFindings(report: SkinReport, story: Story): Finding[] {
       kind: "swap",
       confidence: up ? "Likely" : "Possible",
       tone: up ? "good" : "watch",
-      title: up ? `${METRIC_MOVE[m].adj} since ${plainName(next)}` : `${cap(METRIC_COPY[m].label)} slipped after ${plainName(next)}`,
-      body: `Your ${area.toLowerCase()} has averaged ${a} since ${fmtDay(next.startDate)}, ${up ? "up" : "down"} from ${b} during the ${plainName(s)} weeks.`,
+      title: up ? `${METRIC_MOVE[m].adj} since ${fmtDay(next.startDate)}` : `${cap(METRIC_COPY[m].label)} slipped after ${fmtDay(next.startDate)}`,
+      body: `Your ${area.toLowerCase()}’s ${METRIC_COPY[m].label.toLowerCase()} score averaged ${a} since ${fmtDay(next.startDate)}, ${up ? "up" : "down"} from ${b} in the ${plainName(s)} weeks.`,
+      related: trip
+        ? `You started ${plainName(next)} that day, ${gapWords(dayNumber(next.startDate) - dayNumber(trip.to))} after the ${trip.city} trip.`
+        : `You started ${plainName(next)} that day.`,
       area,
       areas: [area],
       metric: m,

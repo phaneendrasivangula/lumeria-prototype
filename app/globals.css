@@ -154,6 +154,46 @@
     inset 0 0 0 0.5px rgba(255, 255, 255, 0.22), 0 0 0 0.5px rgba(0, 0, 0, 0.05), 0 8px 15px rgba(0, 0, 0, 0.06);
   --sheet-dim: rgba(10, 8, 6, 0.32);
 
+  /* the reveal: evergreen dusk, a gold ring, bone type */
+  --dusk-top: #3f6b4b;
+  --dusk-mid: #2f4a35;
+  --dusk-low: #1c3124;
+  --dusk-deep: #14241a;
+  --dusk-sun: rgba(243, 201, 135, 0.3);
+  --gold-glow: #e9b96a;
+  --gold-core: #fff1d6;
+  --gold-tick: #f3d9a4;
+  --gold-edge: #f3c987;
+  --dusk-ink: #f4efe6;
+  --dusk-sub: rgba(244, 239, 230, 0.74);
+  --dusk-track: rgba(244, 239, 230, 0.16);
+  --dusk-glass:
+    linear-gradient(180deg, rgba(244, 239, 230, 0.26) 0%, rgba(244, 239, 230, 0.1) 100%);
+  --dusk-glass-edge:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 0 rgba(255, 255, 255, 0.1), inset 1px 0 0 rgba(255, 255, 255, 0.18),
+    inset -1px 0 0 rgba(255, 255, 255, 0.18), inset 0 0 0 0.5px rgba(255, 255, 255, 0.22), 0 12px 30px rgba(0, 0, 0, 0.22);
+
+  /* quick-insight cards: each card's tint and its corner glow */
+  --card-sage: #dce8da;
+  --card-sage-2: #f7faf4;
+  --card-sage-glow: rgba(95, 132, 102, 0.28);
+  --card-deep: #cfe0d0;
+  --card-deep-2: #f4f8f1;
+  --card-deep-glow: rgba(47, 74, 53, 0.24);
+  --card-clay: #f4d8c6;
+  --card-clay-2: #fcf4ee;
+  --card-clay-glow: rgba(194, 119, 95, 0.3);
+  --card-bronze: #f1ddb4;
+  --card-bronze-2: #fcf6ea;
+  --card-bronze-glow: rgba(192, 145, 63, 0.3);
+  --card-edge:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 1px 0 0 rgba(255, 255, 255, 0.45), inset -1px 0 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.35), 0 0 0 0.5px rgba(46, 42, 36, 0.06), 0 16px 36px rgba(80, 56, 20, 0.12);
+  --card-row: rgba(255, 255, 255, 0.66);
+  --clay-bar: #c2775f;
+  --photo-tag: rgba(20, 36, 26, 0.55);
+  --photo-line-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+
   --serif: "EB Garamond", Georgia, "Times New Roman", serif;
   --sans: var(--font-geist-sans), -apple-system, "SF Pro Text", system-ui, sans-serif;
 
@@ -233,4 +273,9 @@ button {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* the page underneath doesn't scroll while the reveal (Reveal.tsx) is up */
+html[data-reveal="open"] {
+  overflow: hidden;
 }

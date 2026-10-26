@@ -27,8 +27,10 @@ describe("summary: noor", () => {
   });
 
   it("makes the switch to azelaic acid the top insight, with its real numbers", () => {
-    expect(s.top?.title).toBe("Calmer since azelaic acid");
-    expect(s.top?.body).toBe("Your left cheek has averaged 76 since Oct 13, up from 56 during the retinol weeks.");
+    expect(s.top?.title).toBe("Calmer since Oct 13");
+    expect(s.top?.body).toBe("Your left cheek’s redness score averaged 76 since Oct 13, up from 56 in the retinol weeks.");
+    // what we saw, then what may be related: never a cause
+    expect(s.top?.related).toBe("You started azelaic acid that day, a week after the Phoenix trip.");
     expect(s.top?.confidence).toBe("Likely");
   });
 
@@ -125,7 +127,7 @@ describe("summary: sam", () => {
     expect(s.headline).toEqual(["Calm skin,", "tone to watch."]);
     expect(s.top?.title).toBe("Tone on your forearm: 57 → 42");
     expect(s.top?.confidence).toBe("Worth watching");
-    expect(s.patternsTitle).toBe("Patterns across your skin");
+    expect(s.patternsTitle).toBe("What might be related");
   });
 
   it("asks for a skin type when it's missing", () => {

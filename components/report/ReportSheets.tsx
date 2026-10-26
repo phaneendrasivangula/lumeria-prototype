@@ -4,14 +4,16 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { DialModel } from "@/lib/story/dial";
 import { topicsFrom, type LumiTopic } from "@/lib/story/lumi";
+import type { QuickCard } from "@/lib/story/cards";
 import type { Summary } from "@/lib/story/summary";
 import { EvidenceSheet } from "./EvidenceSheet";
 import { GuideSheet } from "./GuideSheet";
 import { LumiSheet } from "./LumiSheet";
+import { QuickInsights } from "./QuickInsights";
 import { Button, GlyphChip, Icon, Sheet, useToast } from "./ui";
 import s from "./ReportSheets.module.css";
 
-export type SheetState = { kind: "evidence"; id: string } | { kind: "lumi"; topic: LumiTopic } | { kind: "guide" } | { kind: "areas" } | null;
+export type SheetState = { kind: "evidence"; id: string } | { kind: "lumi"; topic: LumiTopic } | { kind: "guide" } | { kind: "areas" } | { kind: "cards" } | null;
 
 /**
  * One page sheet for the whole report, whose content follows what was asked for: Show data, Explain (Lumi), the score
@@ -25,6 +27,8 @@ export function ReportSheets({
   area,
   extraTopics = [],
   areaLinks = [],
+  cards = [],
+  onSuggestion,
 }: {
   sheet: SheetState;
   setSheet: (s: SheetState) => void;
@@ -33,6 +37,8 @@ export function ReportSheets({
   area: string;
   extraTopics?: LumiTopic[];
   areaLinks?: { area: string; href: string; glyph: Parameters<typeof GlyphChip>[0]["glyph"]; current: boolean }[];
+  cards?: QuickCard[];
+  onSuggestion?: (id: string) => void;
 }) {
   const toast = useToast();
   const close = () => setSheet(null);
@@ -86,6 +92,23 @@ export function ReportSheets({
     label = "How to read your score";
     title = "How to read your score";
     body = <GuideSheet dial={dial} score={summary.score} start={period.start} end={period.end} />;
+  } else if (shown?.kind === "cards" && cards.length) {
+    label = "Quick insights";
+    title = "Your month";
+    body = (
+      <QuickInsights
+        cards={cards}
+        onAction={(a) => {
+          const f = summary.findings.find((x) => a.kind !== "suggestion" && x.id === a.findingId);
+          if (a.kind === "lumi" && f) setSheet({ kind: "lumi", topic: { script: f.lumi, findingId: f.id } });
+          else if (a.kind === "evidence" && f) setSheet({ kind: "evidence", id: f.id });
+          else if (a.kind === "suggestion") {
+            close();
+            onSuggestion?.(a.suggestionId);
+          }
+        }}
+      />
+    );
   } else if (shown?.kind === "areas") {
     label = "Choose an area";
     title = "Choose an area";

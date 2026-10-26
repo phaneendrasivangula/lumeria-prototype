@@ -1,5 +1,5 @@
 import type { MetricKey, Product, SkinReport } from "../types";
-import { allOnFace, areaInfo, areaSlug } from "../areas";
+import { areaInfo, areaSlug } from "../areas";
 import { type Band, bandOf } from "../bands";
 import {
   METRICS,
@@ -586,7 +586,7 @@ export function buildSummary(report: SkinReport): Summary {
     top,
     findings: top && !findings.includes(top) ? [top, ...findings] : findings,
     patterns,
-    patternsTitle: allOnFace(story.areas) ? "Patterns across your face" : "Patterns across your skin",
+    patternsTitle: "What might be related",
     areas,
     timeline: first ? [] : timelineFor(report, story, findings, now),
     routine: routineItems(report.products ?? [], story.end, story),

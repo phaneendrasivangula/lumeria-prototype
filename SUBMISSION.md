@@ -11,18 +11,18 @@
 
 ## What I built
 
-Start with `/report/noor` on your phone. The report answers three questions in order:
+Start with `/report/noor` on your phone. After a short load, a **reveal** shows the month in one number and one sentence (the ring draws itself to the score), then **See your report** opens the summary. **View quick insights** under the dial (or the link on the reveal) swipes through the month in four cards. The report then answers three questions in order:
 
-1. **How is my skin right now?** A dial shows the whole month at once: one ring per area, one mark per scan, coloured by how calm the skin was that day. In the middle is the latest overall score and how it has changed since the start, then a one-line story ("A rough start, a calm finish.").
-2. **Is it getting better?** Each area has its own card, compared only with its own usual, because a cheek and a forehead have different normal scores. Tapping one opens the area page: the person's main concern first, the other four measures, what we noticed there, a photo time-lapse with every score against usual, and questions to ask Lumi.
-3. **Why?** Patterns across the face, a timeline of what happened, and the routine. Each pattern says how sure it is: *Likely*, *Possible*, *Can't separate yet*. **Show data** opens the evidence (chart, the two groups compared, the photos); **Explain** opens Lumi, a scripted chat that answers from the person's own numbers.
+1. **How is my skin right now?** The one-line story leads ("A rough start, a calm finish."), then a dial shows the whole month at once: one ring per area, one mark per scan, coloured by how calm the skin was that day. In the middle is the latest overall score and how it has changed since the start.
+2. **Is it getting better?** Each area has its own card, compared only with its own usual, because a cheek and a forehead have different normal scores. Tapping one opens the area page: the person's main concern first, the other four measures, what we noticed there, a before-and-after of the first and latest photo, a photo time-lapse with every score against usual, and questions to ask Lumi.
+3. **Why?** What might be related (each card says what we saw and, separately, what may be related), a timeline of what happened, and the routine. Each pattern says how sure it is: *Likely*, *Possible*, *Can't separate yet*. **Show data** opens the evidence (chart, the two groups compared, the photos); **Explain** opens Lumi, a scripted chat that answers from the person's own numbers.
 
 The same code handles the edge cases:
 - **Maya:** two areas, an unexplained red week, and a "Welcome back" banner because her last scan is five weeks old.
 - **Jordan:** one scan. The page becomes a welcome that shows what more scans will unlock.
 - **Sam:** unsorted scans, unmeasured oil balance, a missing photo and no skin type. Missing values read "Not measured" and charts skip them.
 
-Loading (a breathing dial), not-found and error with retry are all designed states.
+Loading (a breathing dial while the slow API answers), error with retry (`?fail=1`), not found, and empty (a report with no scans yet) are all designed states. Cards show one sentence each; the full reading is one tap away in Show data and Explain.
 
 `/prototype/` is the same design as an interactive app, beyond what the API covers: Home, the scan sheet, the post-scan streak, reminders, the dermatologist export and the monthly-report notification, each built for every person. The code tour is in the README.
 
@@ -45,7 +45,7 @@ Loading (a breathing dial), not-found and error with retry are all designed stat
 ## What I cut / would do next
 
 - **Bring the post-scan streak and Home into the Next app.** They are designed in the prototype but not built against the API.
-- **A side-by-side photo comparison** of the same area over time, with alignment.
+- **Photo alignment** for the before-and-after, so the two scans line up exactly.
 - **Usability tests with real users,** on whether people read the dial correctly without the guide.
 - **Visual regression tests** (Playwright screenshots per person) to go with the unit tests.
 

@@ -86,7 +86,10 @@ export interface Finding {
   confidence: Confidence | null;
   tone: Tone;
   title: string;
+  /** What we saw: the measured change, in plain words. */
   body: string;
+  /** What may be related to it (a product, a trip), said as a possibility, never a cause. */
+  related?: string;
   /** The area the numbers come from, and every area the finding talks about. */
   area: string;
   areas: string[];

@@ -10,10 +10,11 @@ import { areaHref } from "@/lib/story/summary";
 import { useReport } from "@/lib/useReport";
 import { LeadCard, MetricsCard } from "./AreaCharts";
 import { AreaHero, AskLumi, LatestScanNote, Recommendations } from "./AreaParts";
+import { BeforeAfter } from "./BeforeAfter";
 import { Findings } from "./Findings";
 import { ReportSheets, type SheetState } from "./ReportSheets";
 import { Screen } from "./Screen";
-import { ErrorState, LoadingState, NotFoundState } from "./States";
+import { EmptyState, ErrorState, LoadingState, NotFoundState } from "./States";
 import { TimeLapse } from "./TimeLapse";
 import { AreaBar } from "./TitleBar";
 import { SectionHead, TrustNote } from "./ui";
@@ -22,13 +23,15 @@ import { SectionHead, TrustNote } from "./ui";
 export function AreaScreen({ id, slug, fail }: { id: string; slug: string; fail: boolean }) {
   const { state, retry } = useReport(id, fail);
   const back = `/report/${encodeURIComponent(id)}`;
-  if (state.status === "ready") return <Area id={id} slug={slug} report={state.report} />;
+  const empty = state.status === "ready" && !state.report.scans?.length;
+  if (state.status === "ready" && !empty) return <Area id={id} slug={slug} report={state.report} />;
   const guess = cap(slug.replace(/-/g, " "));
   return (
     <Screen header={<AreaBar backHref={back} title={guess} onAreas={() => {}} />} tabs={{ id, active: "report" }}>
       {state.status === "loading" && <LoadingState />}
       {state.status === "error" && <ErrorState onRetry={retry} />}
       {state.status === "not-found" && <NotFoundState />}
+      {empty && <EmptyState />}
     </Screen>
   );
 }
@@ -102,6 +105,7 @@ function Area({ id, slug, report }: { id: string; slug: string; report: SkinRepo
 
       <section aria-labelledby="photos-title">
         <SectionHead id="photos-title" title="Your photos" />
+        <BeforeAfter points={detail.points} area={detail.area} />
         <TimeLapse frames={detail.frames} area={detail.area} onInfo={() => setSheet({ kind: "guide" })} />
       </section>
 

@@ -209,3 +209,9 @@ export function photoOf(scan: Scan): string | null {
   if (!url) return null;
   return /^\/scans\/[^/]+\.jpe?g$/i.test(url) ? url.replace(/(-polarized|-uva)?\.jpe?g$/i, ".svg") : url;
 }
+
+/** The first sentence only, for the report's cards: the full reading is one tap away (Show data, Explain). */
+export function brief(text: string): string {
+  const m = text.match(/^.+?[.!?](?=\s+[A-Z“"]|$)/);
+  return (m ? m[0] : text).trim();
+}

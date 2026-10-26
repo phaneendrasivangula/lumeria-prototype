@@ -1,0 +1,310 @@
+/* The reveal: evergreen dusk, a sun glow behind a gold ring, bone type and a liquid-glass button. Tokens only. */
+.reveal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  justify-content: center;
+  background: var(--dusk-deep);
+  color: var(--dusk-ink);
+  overflow: hidden;
+  outline: none;
+}
+
+.sky {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(78% 42% at 50% 33%, var(--dusk-top) 0%, var(--dusk-mid) 38%, var(--dusk-low) 70%, var(--dusk-deep) 100%);
+}
+
+.sun {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(42% 22% at 50% 33%, var(--dusk-sun) 0%, transparent 100%);
+  transform-origin: 50% 33%;
+  animation: breathe 7s ease-in-out infinite;
+}
+
+.column {
+  position: relative;
+  width: 100%;
+  max-width: var(--column);
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: max(44px, env(safe-area-inset-top)) 0 max(26px, env(safe-area-inset-bottom));
+}
+
+.top {
+  flex-shrink: 0;
+  text-align: center;
+  animation: rise 0.8s var(--ease) 0.1s both;
+}
+
+.logo {
+  display: block;
+  width: 58px;
+  height: 36px;
+  margin: 0 auto 12px;
+  object-fit: contain;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dusk-sub);
+}
+
+.hero {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 220px;
+  margin: 10px 0;
+}
+
+.ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.edgeStop {
+  stop-color: var(--gold-edge);
+}
+
+.ticks {
+  stroke: var(--gold-tick);
+  stroke-opacity: 0.32;
+  stroke-width: 1;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation:
+    fade 1.4s ease 0.15s both,
+    spin 120s linear infinite;
+}
+
+.track {
+  fill: none;
+  stroke: var(--dusk-track);
+  stroke-width: 2;
+}
+
+.arc {
+  fill: none;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: draw 1.9s var(--ease) 0.45s forwards;
+}
+
+.arcGlow {
+  stroke: var(--gold-glow);
+  stroke-width: 11;
+  opacity: 0.95;
+}
+
+.arcCore {
+  stroke: var(--gold-core);
+  stroke-width: 2.8;
+}
+
+.dot {
+  fill: var(--gold-core);
+  opacity: 0;
+  animation: fade 0.45s ease 2.2s forwards;
+}
+
+.dotGlow {
+  fill: var(--gold-glow);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation:
+    fade 0.45s ease 2.2s forwards,
+    pulse 3.2s ease-in-out 2.7s infinite;
+}
+
+.number {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  animation: rise 1s var(--ease) 0.6s both;
+}
+
+.score {
+  font-family: var(--serif);
+  font-size: 92px;
+  line-height: 92px;
+  letter-spacing: -0.02em;
+}
+
+.label {
+  margin-top: 4px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.sub {
+  margin-top: 3px;
+  font-size: 14px;
+  color: var(--dusk-sub);
+}
+
+.words {
+  flex-shrink: 0;
+  padding: 0 30px 22px;
+  text-align: center;
+  animation: rise 0.9s var(--ease) 1.25s both;
+}
+
+.headline {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 36px;
+  letter-spacing: -0.01em;
+}
+
+.tail {
+  display: block;
+  font-style: italic;
+}
+
+.subhead {
+  margin: 10px 0 0;
+  font-size: 15px;
+  line-height: 21px;
+  color: var(--dusk-sub);
+}
+
+.ctas {
+  flex-shrink: 0;
+  padding: 0 24px;
+  animation: rise 0.9s var(--ease) 1.5s both;
+}
+
+.primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 56px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--dusk-glass);
+  box-shadow: var(--dusk-glass-edge);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--dusk-ink);
+  cursor: pointer;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  height: 44px;
+  margin-top: 4px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dusk-sub);
+  cursor: pointer;
+}
+
+.primary:focus-visible,
+.link:focus-visible {
+  outline: 2px solid var(--gold-core);
+  outline-offset: 3px;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.78;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.7);
+    opacity: 0.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sun,
+  .top,
+  .ticks,
+  .arc,
+  .dot,
+  .dotGlow,
+  .number,
+  .words,
+  .ctas {
+    animation: none;
+  }
+  .arc {
+    stroke-dashoffset: 0;
+  }
+  .dot,
+  .dotGlow {
+    opacity: 1;
+  }
+}

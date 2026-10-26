@@ -1,17 +1,18 @@
 "use client";
 
+import { brief } from "@/lib/format";
 import type { Finding } from "@/lib/story/types";
-import { Button, Card, ChipButton, Pill } from "./ui";
+import { Button, Card, ChipButton, Icon, Pill } from "./ui";
 import s from "./Highlights.module.css";
 
-/** The headline under the dial: two halves, the second one set slightly apart, and one plain sentence under it. */
+/** The headline above the dial: two halves, the second one set slightly apart, and one plain sentence under it. */
 export function Headline({ headline, subhead }: { headline: [string, string]; subhead: string }) {
   return (
     <div className={s.story}>
       <h2 className={s.headline}>
         {headline[0]} <span className={s.tail}>{headline[1]}</span>
       </h2>
-      <p className={s.subhead}>{subhead}</p>
+      <p className={s.subhead}>{brief(subhead)}</p>
     </div>
   );
 }
@@ -29,7 +30,13 @@ export function TopInsight({ finding, onExplain, onShowData }: { finding: Findin
       <h2 className={s.topTitle} data-labelled={labelled ? "" : undefined}>
         {finding.title}
       </h2>
-      <p className={s.topBody}>{finding.body}</p>
+      <p className={s.topBody}>{brief(finding.body)}</p>
+      {finding.related && (
+        <div className={s.related}>
+          <span className={s.relatedLabel}>May be related</span>
+          <p className={s.relatedBody}>{finding.related}</p>
+        </div>
+      )}
       <div className={s.actions}>
         <ChipButton icon="flare" onClick={onExplain}>
           Explain
@@ -53,5 +60,16 @@ export function WelcomeBack({ title, body, cta, onCta }: { title: string; body: 
         {cta}
       </Button>
     </Card>
+  );
+}
+
+/** The tertiary way into the quick-insight cards, under the dial. */
+export function QuickLink({ count, onOpen }: { count: number; onOpen: () => void }) {
+  return (
+    <button type="button" className={s.quick} onClick={onOpen}>
+      <Icon name="style" size={18} />
+      View quick insights <span className={s.quickMeta}>· {count} cards</span>
+      <Icon name="chevron_right" size={18} />
+    </button>
   );
 }

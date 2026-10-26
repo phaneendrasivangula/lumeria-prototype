@@ -1,5 +1,6 @@
 "use client";
 
+import { brief } from "@/lib/format";
 import { useState } from "react";
 import type { Finding } from "@/lib/story/types";
 import { Card, ChipButton, Icon, MatchQuestion, Pill } from "./ui";
@@ -36,7 +37,7 @@ export function Findings({
                     </span>
                   )}
                   <span className={s.title}>{f.title}</span>
-                  <span className={s.body}>{f.body}</span>
+                  <span className={s.body}>{brief(f.body)}</span>
                 </span>
                 <span className={s.chevron}>
                   <Icon name="chevron_right" size={18} />

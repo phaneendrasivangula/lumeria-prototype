@@ -76,3 +76,22 @@ export function NotFoundState({ what = "report" }: { what?: "report" | "area" })
     </>
   );
 }
+
+/** Empty: the report exists but has no scans in it yet, so there is nothing to tell. */
+export function EmptyState() {
+  return (
+    <>
+      <span className={s.periodGap} aria-hidden />
+      <Card variant="big" className={s.stateCard}>
+        <span className={s.badge} aria-hidden>
+          <Icon name="center_focus_weak" size={26} />
+        </span>
+        <h2 className={s.stateTitle}>No scans in this report yet.</h2>
+        <p className={s.stateBody}>Your report fills in after your first scan. One scan gives you a starting point; a few a week show how your skin is changing.</p>
+        <Link href="/" className={`${s.retry} ${s.primaryLink}`}>
+          Take your first scan
+        </Link>
+      </Card>
+    </>
+  );
+}

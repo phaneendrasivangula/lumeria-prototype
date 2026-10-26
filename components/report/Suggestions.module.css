@@ -27,3 +27,59 @@
 .cta {
   margin-top: 14px;
 }
+
+.rows {
+  list-style: none;
+  margin: 16px 0 -8px;
+  padding: 0;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 16px 0;
+  border: 0;
+  border-top: 0.5px solid var(--hairline-strong);
+  background: none;
+  font: inherit;
+  color: var(--stone);
+  text-align: left;
+  cursor: pointer;
+}
+
+.rowIcon {
+  display: inline-flex;
+  margin-top: 1px;
+  color: var(--bronze-deep);
+}
+
+.rowText {
+  flex: 1;
+  min-width: 0;
+}
+
+.rowTitle {
+  display: block;
+  font-size: 16px;
+  line-height: 21px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.rowBody {
+  display: block;
+  margin-top: 2px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--muted);
+}
+
+.rowCta {
+  display: inline-block;
+  margin-top: 2px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--forest-text);
+}
