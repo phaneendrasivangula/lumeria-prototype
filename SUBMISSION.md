@@ -55,6 +55,7 @@ Loading, error (with retry), not found and empty all have their own designed scr
 - **Honest about what we don't know.** The report doesn't give Noor's azelaic acid the credit. It says the switch and the trip can't be separated yet, and suggests a way to tell them apart. Nothing reads as a diagnosis.
 - **Nothing is written for Noor.** `lib/story` doesn't know who anyone is. Trips are found from scan locations, and a pattern only shows up when there's enough data behind it.
 - **Local time.** A scan taken in Phoenix shows Phoenix time.
+- **Geist instead of Montserrat.** I started with Montserrat, but it didn't work for the people reading the report or for the theme. Its wide, geometric letters felt loud next to the calm, soft look, and long sentences and lots of numbers were harder to read on a phone. Geist is quieter and easier to read at small sizes, and its numbers line up neatly, so the scores and the dial feel calmer.
 - **Accessible.** Text contrast meets WCAG AA, touch targets are at least 44pt, the sheets are native `<dialog>`s, and reduced motion is respected. axe-core finds no issues on any page.
 
 ## Extra data I assumed
