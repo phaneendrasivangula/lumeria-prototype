@@ -1,42 +1,366 @@
-/* first scan */
-.steps {
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 15px;
+}
+
+.intro {
+  padding: 4px 4px 0;
+}
+
+.eyebrow,
+.eyebrowGold,
+.eyebrowMuted {
+  margin: 0;
+  font-size: 11px;
+  line-height: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--bronze-deep);
+}
+
+.eyebrowMuted {
+  color: var(--muted);
+}
+
+.headline {
+  margin: 4px 0 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 34px;
+  letter-spacing: -0.015em;
+}
+
+.lead {
+  margin: 8px 0 0;
+  font-size: 15px;
+  line-height: 20px;
+  color: var(--muted);
+}
+
+.dialCard {
+  padding: 14px 14px 16px;
+}
+
+.dial {
+  position: relative;
+  width: 100%;
+  max-width: 330px;
+  aspect-ratio: 330 / 232;
+  margin: 4px auto 6px;
+}
+
+.svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glow1 {
+  stop-color: var(--glow);
+}
+
+.glow2 {
+  stop-color: var(--glow);
+  stop-opacity: 0;
+}
+
+.track {
+  fill: none;
+  stroke: var(--track-bottom);
+  stroke-linecap: round;
+}
+
+.mark {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.mark[data-band="calm"] {
+  stroke: var(--band-calm);
+}
+.mark[data-band="dipped"] {
+  stroke: var(--band-dipped);
+}
+.mark[data-band="rough"] {
+  stroke: var(--band-rough);
+}
+
+.axis {
+  font-family: var(--sans);
+  font-size: 11px;
+  fill: var(--tile-ink);
+}
+
+.glyph {
+  position: absolute;
+  left: 1.2%;
+  top: 75.4%;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bone);
+  box-shadow: 0 0 0 1.6px var(--muted);
+  color: var(--muted);
+}
+
+.center {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 57.8%;
+  text-align: center;
+}
+
+.overall {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  line-height: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.info {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  margin-left: 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--chip);
+  box-shadow: var(--chip-edge);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.info::after {
+  content: "";
+  position: absolute;
+  inset: -11px;
+}
+
+.score {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 50px;
+  line-height: 52px;
+}
+
+.firstPill {
+  display: inline-block;
+  margin: 2px 0 0;
+  padding: 3px 10px;
+  border-radius: 12px;
+  background: var(--tint-gold);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--bronze-deep);
+}
+
+.caption {
+  margin: 2px 0 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.scores {
+  padding: 14px 18px 8px;
+}
+
+.scoresHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.higher {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  min-height: 44px;
+  margin: -12px 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--forest-deep);
+  cursor: pointer;
+}
+
+.bars {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.step {
-  display: grid;
-  grid-template-columns: 28px 1fr;
-  gap: 12px;
-  align-items: center;
-  padding: 12px 0;
-  border-top: 0.5px solid var(--hairline);
+.bar {
+  display: block;
+  padding: 10px 0;
 }
 
-.step:first-child {
-  border-top: 0;
+.bar + .bar {
+  border-top: 1px solid var(--grid);
 }
 
-.stepNum {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--sand-soft);
-  font-size: 13px;
+.barTop {
+  display: flex;
+  line-height: 18px;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.barName {
+  font-size: 15px;
   font-weight: 600;
 }
 
-.step[data-done="true"] .stepNum {
-  background: var(--forest);
-  color: #fff;
+.barWord {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.barWord b {
+  color: var(--ink);
+}
+
+.track2 {
+  position: relative;
+  display: block;
+  height: 6px;
+  margin-top: 8px;
+  border-radius: 3px;
+  background: var(--grid);
+}
+
+.fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--w);
+  border-radius: 3px;
+}
+
+.fill[data-tone="good"] {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--forest-deep) 40%, transparent), var(--forest-deep));
+}
+
+.fill[data-tone="watch"] {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--bronze-deep) 40%, transparent), var(--bronze-deep));
+}
+
+.fill[data-tone="alert"] {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--clay-soft) 40%, transparent), var(--clay-soft));
+}
+
+.noticed,
+.next {
+  padding: 16px 20px;
+}
+
+.noticedTitle {
+  margin: 2px 0 6px;
+  font-family: var(--serif);
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: -0.015em;
+}
+
+.obs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.obs li {
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.obs li::before {
+  content: "· ";
+}
+
+.tip {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: var(--tint-forest);
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--forest-deep);
+}
+
+.steps {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.step + .step {
+  border-top: 1px solid var(--grid);
+}
+
+.num {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--wash);
+  color: var(--muted);
+}
+
+.step[data-done] .num {
+  background: var(--forest-deep);
+  color: var(--cream);
+}
+
+.stepTitle {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.step[data-done] .stepTitle {
+  color: var(--ink);
 }
 
 .stepSub {
   display: block;
   font-size: 13px;
   color: var(--muted);
+}
+
+.plan {
+  margin-top: 10px;
 }

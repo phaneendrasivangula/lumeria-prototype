@@ -1,22 +1,19 @@
-import type { StoryEvent } from "@/lib/story";
-import { fmtDay } from "@/lib/format";
+import type { TimelineItem } from "@/lib/story/summary";
 import { Card } from "./ui";
 import s from "./Timeline.module.css";
 
-/** What happened this month, in order: routine changes, trips and cycle. Dot colour comes from data-kind. */
-export function Timeline({ events }: { events: StoryEvent[] }) {
+/** "What happened": routine changes, trips, cycle starts, or (with little logged) the month's own milestones. */
+export function Timeline({ items }: { items: TimelineItem[] }) {
   return (
-    <Card>
-      <ol className={s.timeline}>
-        {events.map((e) => (
-          <li key={`${e.kind}-${e.day}-${e.title}`} className={s.event} data-kind={e.kind}>
-            <span className={s.eventDay}>
-              {fmtDay(e.day)}
-              {e.endDay && e.endDay !== e.day ? `–${fmtDay(e.endDay, { day: "numeric" })}` : ""}
-            </span>
-            <span>
-              {e.title}
-              {e.detail && <span className={s.eventDetail}>{e.detail}</span>}
+    <Card className={s.card}>
+      <ol className={s.list}>
+        {items.map((it, i) => (
+          <li key={`${it.day}${it.title}`} className={s.item} data-dot={it.dot} data-next={items[i + 1]?.dot ?? "end"}>
+            <span className={s.dot} aria-hidden />
+            <span className={s.date}>{it.label}</span>
+            <span className={s.what}>
+              <span className={s.title}>{it.title}</span>
+              <span className={s.detail}>{it.detail}</span>
             </span>
           </li>
         ))}

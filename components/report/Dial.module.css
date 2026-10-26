@@ -1,140 +1,328 @@
-/* dial */
-.dialWrap {
+.dial {
   position: relative;
-  margin: 18px auto 0;
   width: 100%;
   max-width: 362px;
+  aspect-ratio: 362 / 254;
+  margin: 4px auto 6px;
 }
 
-.dial {
-  display: block;
+.svg {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: auto;
+  height: 100%;
   overflow: visible;
 }
 
-.mark {
+.trackTop {
+  stop-color: var(--track-top);
+  stop-opacity: 0.9;
+}
+
+.trackBottom {
+  stop-color: var(--track-bottom);
+  stop-opacity: 0.9;
+}
+
+.shadow {
+  flood-color: var(--shadow-dial);
+  flood-opacity: 0.16;
+}
+
+.glow1 {
+  stop-color: var(--glow);
+}
+
+.glow2 {
+  stop-color: var(--glow);
+  stop-opacity: 0.55;
+}
+
+.glow3 {
+  stop-color: var(--glow);
+  stop-opacity: 0;
+}
+
+.stop[data-band="calm"] {
+  stop-color: var(--band-calm);
+}
+
+.stop[data-band="dipped"] {
+  stop-color: var(--band-dipped);
+}
+
+.stop[data-band="rough"] {
+  stop-color: var(--band-rough);
+}
+
+.stop[data-band="none"] {
+  stop-color: var(--band-none);
+}
+
+.ring {
+  transition: opacity 0.3s ease;
+}
+
+.ring[data-dim] {
+  opacity: 0.2;
+}
+
+/* long periods: the inner rings stay quiet until their name is tapped */
+.ring[data-faint] .dot {
+  opacity: 0.22;
+}
+
+.track,
+.trackTint,
+.mark,
+.product {
+  fill: none;
   stroke-linecap: round;
-  animation: draw 0.7s var(--ease) both;
-  animation-delay: var(--d, 0ms);
+}
+
+.trackTint {
+  stroke: var(--track-tint);
+}
+
+/* each mark draws itself in, outer ring first, left to right, like the Fitness rings */
+.mark,
+.product {
+  stroke-dasharray: 1 1;
+  animation: draw 0.5s var(--ease) var(--d, 0ms) both;
 }
 
 @keyframes draw {
   from {
-    stroke-dashoffset: var(--len);
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
   }
 }
 
-.score {
+.dot {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pop 0.45s cubic-bezier(0.34, 1.4, 0.64, 1) var(--d, 0ms) both;
+}
+
+.dot[data-band="calm"] {
+  fill: var(--band-calm);
+}
+
+.dot[data-band="dipped"] {
+  fill: var(--band-dipped);
+}
+
+.dot[data-band="rough"] {
+  fill: var(--band-rough);
+}
+
+.dot[data-band="none"] {
+  fill: var(--band-none);
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+}
+
+.product {
+  stroke: var(--stone);
+}
+
+.product[data-active] {
+  stroke: var(--forest-deep);
+}
+
+.marker {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--chip-strong);
+  box-shadow: var(--chip-edge);
+  animation: pop 0.42s cubic-bezier(0.34, 1.4, 0.64, 1) var(--d, 0ms) both;
+}
+
+.marker[data-kind="trip"] {
+  color: var(--clay-soft);
+}
+
+.marker[data-kind="cycle"] {
+  color: var(--plum-deep);
+}
+
+.center {
   position: absolute;
   left: 0;
   right: 0;
-  top: 46%;
+  top: 53.9%;
   text-align: center;
 }
 
-.scoreNum {
+.score {
+  margin: 0;
+}
+
+.number {
+  position: relative;
+  display: inline-block;
   font-family: var(--serif);
   font-size: 64px;
   line-height: 64px;
+  font-variant-numeric: lining-nums;
+  color: var(--ink);
 }
 
-.scoreInfo {
+.info {
   position: absolute;
-  top: 2px;
-  margin-left: 6px;
-  width: 44px;
-  height: 44px;
-  border: 0;
-  background: none;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: 0;
-}
-
-.scoreInfo > span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  left: calc(100% + 1px);
+  top: 14px;
   width: 22px;
   height: 22px;
+  padding: 0;
+  border: 0;
   border-radius: 50%;
-  background: var(--chip);
-  box-shadow: var(--chip-edge);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--muted);
+  background: var(--chip);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  backdrop-filter: blur(12px) saturate(180%);
+  box-shadow: var(--chip-edge);
+  cursor: pointer;
+}
+
+/* 22px to look at, 44px to tap */
+.info::after {
+  content: "";
+  position: absolute;
+  inset: -11px;
 }
 
 .delta {
+  margin: 8px 0 0;
+  display: flex;
+  justify-content: center;
+}
+
+.labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ringLabel {
+  position: absolute;
+  left: var(--x);
+  top: calc(84.65% - 22px);
+  width: 22px;
+  height: 44px;
+  margin-left: -1.5px;
+  padding: 0;
+  border: 0;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: opacity 0.3s ease;
+}
+
+.ringLabel[data-dim] {
+  opacity: 0.35;
+}
+
+.chip {
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  margin-top: 6px;
-  font-size: 13px;
+  justify-content: center;
+  color: var(--ink);
+  background: var(--chip-strong);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  backdrop-filter: blur(12px) saturate(180%);
+  box-shadow: var(--chip-lift);
+}
+
+.ringLabel[aria-pressed="true"] .chip {
+  box-shadow:
+    0 0 0 1.5px var(--forest),
+    var(--chip-lift);
+}
+
+.dial[data-decorative] .number {
+  font-size: 46px;
+  line-height: 46px;
+}
+
+/* long periods: ring names run up the left side, under where each ring starts */
+.labels[data-text] .ringLabel {
+  top: auto;
+  bottom: 10px;
+  width: 22px;
+  height: auto;
+  min-height: 44px;
+  margin-left: -4px;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.vertical {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
   color: var(--muted);
 }
 
-.deltaChip {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  height: 24px;
-  padding: 0 8px;
-  border-radius: 100px;
-  background: rgba(95, 132, 102, 0.16);
-  color: var(--forest);
-  font-weight: 600;
+.ringLabel[aria-pressed="true"] .vertical {
+  color: var(--ink);
 }
 
-.deltaChip[data-down="true"] {
-  background: rgba(169, 71, 44, 0.12);
-  color: var(--clay);
+/* the score guide's numbered callouts */
+.keys {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
-.legend {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 6px 14px;
-  margin: 10px 0 0;
-  padding: 0;
-  list-style: none;
-  font-size: 12px;
-  color: var(--faint);
-}
-
-.legend i {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 5px;
+.key {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
   border-radius: 50%;
-}
-
-.track {
-  fill: none;
-  stroke: var(--sand);
-  stroke-linecap: round;
-}
-
-.mark {
-  fill: none;
-}
-
-.mark[data-band="calm"] {
-  stroke: var(--band-calm);
-}
-
-.mark[data-band="dipped"] {
-  stroke: var(--band-dipped);
-}
-
-.mark[data-band="rough"] {
-  stroke: var(--band-rough);
-}
-
-.axis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ink);
+  color: var(--page);
+  box-shadow: 0 0 0 2px var(--page);
   font-size: 12px;
-  fill: var(--faint);
+  font-weight: 700;
+  z-index: 2;
 }

@@ -2,47 +2,65 @@
 
 **Live:** https://lumeria-prototype.vercel.app (open on a phone). Start at `/report/noor`, then
 `/report/maya`, `/report/jordan`, `/report/sam`, and `/report/noor?fail=1` for the error state.
-The full interactive design (Lumi chat, scan flow, streaks) is at `/prototype/`.
+Each area has its own page, e.g. `/report/noor/area/left-cheek`. The full interactive design (Lumi chat, scan flow,
+streaks) is at `/prototype/`.
 Write-up: [`SUBMISSION.md`](SUBMISSION.md).
 
 ## Code tour
 
 ```
 app/
-  page.tsx                  People index (Noor, Maya, Jordan, Sam) + link to the prototype
-  report/[id]/page.tsx      Server route: reads id and ?fail, renders <ReportScreen>
-  api/**                    Untouched mock API
-  globals.css               Design tokens: colour, type, radii, glass, bands, motion
+  page.tsx                        People index (Noor, Maya, Jordan, Sam) + link to the prototype
+  report/[id]/page.tsx            The monthly Summary: <SummaryScreen>
+  report/[id]/area/[area]/page.tsx  One area in detail (e.g. /report/noor/area/left-cheek): <AreaScreen>
+  api/**                          Untouched mock API
+  globals.css                     Design tokens: every colour, material (glass, warm card, chip), mask and motion curve
 lib/
-  useReport.ts              Client fetch: loading | ready | not-found | error, with retry
-  format.ts                 Dates in the scan's own time zone, metric copy, small maths
-  bands.ts                  Calm / Dipped / Rough thresholds and their plain-language copy
-  story/                    The "story engine": raw report -> what the page says
-    events.ts               Trips (from scan locations), product changes, cycle
-    patterns.ts             Group comparisons, strength, caveats when causes overlap
-    story.ts                buildStory(): shape, headline, areas, latest scan
-    story.test.ts           Runs all four people through the engine
+  useReport.ts                    Client fetch: loading | ready | not-found | error, with retry
+  format.ts                       Dates in the scan's own time zone, metric words, null-safe scores, photo guard
+  bands.ts                        Calm / Dipped / Rough thresholds and their plain-language copy
+  areas.ts                        Area names → slug, glyph (dot / brow arc / jaw curve), 3D face image
+  charts.ts                       Pure SVG geometry: smooth lines, fills, dial arcs, mark spacing, sparklines
+  exportCsv.ts                    "Export report": every scan as CSV
+  story/                          The story engine: raw report → what each screen says
+    story.ts, events.ts, patterns.ts  Ordering, shape of the month, trips/products/cycle, comparisons
+    findings.ts                   Every pattern with its confidence (Likely / Possible / Can’t separate yet),
+                                  evidence (chart windows, groups, photos) and a scripted Lumi answer
+    summary.ts                    The Summary screen as data: headline, top insight, areas, timeline, routine,
+                                  suggestions, welcome-back, trust note
+    dial.ts                       The dial: one ring per area, one mark per scan, products, trip/cycle markers
+    area.ts                       The area page: lead measure, rows, shaded trips, time-lapse frames and tiles,
+                                  Lumi questions, recommendations (only when the data supports them)
+    series.ts, lumi.ts            Evidence-chart data; matching a typed question to a scripted answer
+    *.test.ts                     Vitest: all four people through every builder, plus "no medical claims"
 components/report/
-  ReportScreen.tsx          Page composition and state switching
-  Dial, TodayCard, Areas, Patterns, Timeline, Routine, ScanStrip, FirstScan
-  ScanSheet, GuideSheet     Native <dialog> bottom sheets
-  states.tsx                Skeleton loading, error with retry, not found
-  ui/                       Card, Section, Pill, Icon, Sheet + shared text styles
-  *.module.css              One CSS module per component, tokens only
-public/prototype/           Generated design prototype (see below)
+  SummaryScreen, AreaScreen       Page composition and state switching
+  Screen, TabBar, TitleBar        Phone column, morning wash, frosted pinned header, floating glass tab bar
+  Dial, Highlights, AreaCards, Findings, Timeline, Routine, Suggestions, FirstScan   Summary sections
+  AreaCharts, AreaParts, TimeLapse                                                  Area page sections
+  ReportSheets → EvidenceSheet, LumiSheet, GuideSheet   One page sheet; its content follows what was opened
+  States                          Loading (breathing dial), error with retry, not found
+  ui/                             Icon (Material Symbols paths), Pill, ChipButton, Button, Card, Sheet (<dialog>), Toast
+  *.module.css                    One CSS module per component, tokens only
+public/areas, public/products     Neutral 3D face/body and product renders used by the design
 ```
 
-**How it fits together.** The page never hard-codes a person. `buildStory()` turns whatever the API
-returns into a `Story` (shape `first` | `trend`, areas, insights, events), and each component only
-renders a slice of it. That is why one code path handles Noor's busy month, Maya's two areas,
-Jordan's single scan and Sam's messy data (unsorted scans, null scores, a missing photo).
+**How it fits together.** The page never hard-codes a person. `buildSummary()` and `buildArea()` turn whatever the API
+returns into plain data, and each component renders a slice of it. That is why one code path handles Noor's busy month
+(product switch overlapping a trip: "Can’t separate yet"), Maya's two areas and unexplained rough week (plus "Welcome back"
+because her last scan is five weeks old), Jordan's single scan (first-scan layout) and Sam's messy data (unsorted scans,
+unmeasured oil balance, a missing photo, no skin type).
 
 **Conventions.**
 - Every score reads the same way round: higher is better. Colour always comes with a word.
-- No hex values in components. Colours are tokens in `globals.css`. Per-item colour uses
-  `data-*` attributes (`data-band`, `data-kind`), and inline styles only pass CSS variables.
-- Patterns say how sure they are ("Likely", "Possible", "Can't separate yet"), never a diagnosis.
-- Times are shown in the time zone the scan was taken in.
+- No colour values in components or modules: they live in `globals.css`. Per-item colour uses `data-*` attributes
+  (`data-band`, `data-tone`, `data-metric`, `data-hue`); inline styles only pass CSS variables (positions, delays).
+- Patterns say how sure they are ("Likely", "Possible", "Can’t separate yet"), never a diagnosis. A test scans every
+  generated sentence for diagnosis words.
+- Missing values read "Not measured" and charts skip them; nothing is drawn as zero.
+- Sheets are native `<dialog>`s opened with `showModal()` (focus trap, Escape, focus return); motion is skipped under
+  `prefers-reduced-motion`.
+- Real scope photos (`public/scans/*.jpg`) are never shown; `photoOf()` falls back to the generated placeholder.
 
 **Commands**
 
@@ -51,7 +69,7 @@ npm install
 npm run dev         # http://localhost:3000
 npm run lint        # ESLint (next/core-web-vitals + typescript)
 npm run typecheck
-npm test            # Vitest: story engine + formatting
+npm test            # Vitest: story engine, findings, dial, area page, charts, Lumi, export
 npm run build
 ```
 

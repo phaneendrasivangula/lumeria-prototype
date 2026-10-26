@@ -1,0 +1,171 @@
+.dock {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  padding: 18px 16px calc(env(safe-area-inset-bottom, 0px) + 14px);
+  background: var(--nav-veil);
+  pointer-events: none;
+}
+
+.row {
+  width: min(370px, 100%);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: width 0.6s var(--ease);
+  pointer-events: auto;
+}
+
+.pill {
+  position: relative;
+  isolation: isolate;
+  flex: 1;
+  height: 62px;
+  padding: 4px;
+  border-radius: 296px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2px;
+  transition: height 0.6s var(--ease);
+}
+
+.glass {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 296px;
+  overflow: hidden;
+  background: var(--nav-glass);
+  -webkit-backdrop-filter: blur(10px) saturate(190%) brightness(1.06);
+  backdrop-filter: blur(10px) saturate(190%) brightness(1.06);
+  box-shadow: var(--nav-edge);
+  pointer-events: none;
+}
+
+.glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--nav-shine);
+}
+
+.indicator {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc((100% - 14px) / 4);
+  border-radius: 296px;
+  background: var(--nav-active);
+  box-shadow: var(--nav-active-edge);
+  pointer-events: none;
+  transition: transform 0.55s cubic-bezier(0.34, 1.32, 0.64, 1);
+}
+
+.indicator[data-index="-1"] {
+  opacity: 0;
+}
+
+.indicator[data-index="1"] {
+  transform: translateX(calc(100% + 2px));
+}
+
+.indicator[data-index="2"] {
+  transform: translateX(calc(2 * (100% + 2px)));
+}
+
+.indicator[data-index="3"] {
+  transform: translateX(calc(3 * (100% + 2px)));
+}
+
+.tab {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 100%;
+  min-height: 40px;
+  border-radius: 100px;
+  font-size: 10.5px;
+  line-height: 12px;
+  letter-spacing: 0;
+  color: var(--faint);
+  transition: color 0.25s ease;
+}
+
+.tab[aria-current="page"] {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.tab:focus-visible,
+.scan:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: -4px;
+}
+
+.label {
+  display: block;
+  max-height: 12px;
+  overflow: hidden;
+  transition:
+    max-height 0.4s cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 0.25s ease;
+}
+
+/* the scan button: forest liquid glass with a white symbol */
+.scan {
+  position: relative;
+  isolation: isolate;
+  width: 62px;
+  height: 62px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 1000px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--page);
+  background: var(--forest);
+  cursor: pointer;
+  transition:
+    width 0.6s var(--ease),
+    height 0.6s var(--ease);
+}
+
+.scanBg {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--scan-shine);
+  box-shadow: var(--scan-edge);
+}
+
+.scan svg {
+  position: relative;
+}
+
+.dock[data-small] .row {
+  width: min(292px, 100%);
+}
+
+.dock[data-small] .pill {
+  height: 48px;
+}
+
+.dock[data-small] .label {
+  max-height: 0;
+  opacity: 0;
+}
+
+.dock[data-small] .scan {
+  width: 48px;
+  height: 48px;
+}

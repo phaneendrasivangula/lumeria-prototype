@@ -2,9 +2,10 @@
 
 **Link:** https://lumeria-prototype.vercel.app (best on a phone)
 
-- `/report/noor`, `/report/maya`, `/report/jordan`, `/report/sam`: the report, built in Next.js from the mock API
+- `/report/noor`, `/report/maya`, `/report/jordan`, `/report/sam`: the monthly report, built in Next.js from the mock API
+- `/report/<id>/area/<area>` (e.g. `/report/noor/area/left-cheek`): one area in detail
 - `/report/noor?fail=1`: the error state, with retry
-- `/prototype/`: the full interactive design (Lumi chat, scan detail, streaks, notifications)
+- `/prototype/` (add `?person=maya`, `sam` or `jordan`): the full interactive app design, every screen for every person
 
 **Time spent:** <!-- Phaneendra: fill in -->
 
@@ -12,20 +13,18 @@
 
 Start with `/report/noor` on your phone. The report answers three questions in order:
 
-1. **How is my skin right now?** A dial shows the whole month at once. There is one ring per area, and each mark is one scan, coloured by how calm the skin was that day. In the middle is today's overall score and how it has changed since the start. Below that sit a one-line story ("A rough patch, then your best skin yet") and the latest scan with one thing to try.
-2. **Is it getting better?** Each area is compared only with its own usual, because a cheek and a forehead have different normal scores.
-3. **Why?** This section shows patterns, a timeline of what happened, and the routine. Each pattern says how sure it is: *Likely*, *Possible* or *Can't separate yet*. "Show data" opens the numbers and the person's own notes behind it.
-
-Every scan opens in a sheet. The sheet has the photo in each light, every score against this area's usual, and the context: city, UV, humidity, sleep, cycle day and notes.
+1. **How is my skin right now?** A dial shows the whole month at once: one ring per area, one mark per scan, coloured by how calm the skin was that day. In the middle is the latest overall score and how it has changed since the start, then a one-line story ("A rough start, a calm finish.").
+2. **Is it getting better?** Each area has its own card, compared only with its own usual, because a cheek and a forehead have different normal scores. Tapping one opens the area page: the person's main concern first, the other four measures, what we noticed there, a photo time-lapse with every score against usual, and questions to ask Lumi.
+3. **Why?** Patterns across the face, a timeline of what happened, and the routine. Each pattern says how sure it is: *Likely*, *Possible*, *Can't separate yet*. **Show data** opens the evidence (chart, the two groups compared, the photos); **Explain** opens Lumi, a scripted chat that answers from the person's own numbers.
 
 The same code handles the edge cases:
-- **Maya:** two areas.
-- **Jordan:** one scan. The page becomes a welcome that explains what more scans will unlock.
-- **Sam:** unsorted scans, null scores and a missing photo.
+- **Maya:** two areas, an unexplained red week, and a "Welcome back" banner because her last scan is five weeks old.
+- **Jordan:** one scan. The page becomes a welcome that shows what more scans will unlock.
+- **Sam:** unsorted scans, unmeasured oil balance, a missing photo and no skin type. Missing values read "Not measured" and charts skip them.
 
-The page also has loading (a skeleton), not-found and error states.
+Loading (a breathing dial), not-found and error with retry are all designed states.
 
-`/prototype/` is the high-fidelity design for the parts that go beyond the API: asking Lumi about a pattern, a celebration screen after a scan, and the monthly-report notification. The code tour is in the README.
+`/prototype/` is the same design as an interactive app, beyond what the API covers: Home, the scan sheet, the post-scan streak, reminders, the dermatologist export and the monthly-report notification, each built for every person. The code tour is in the README.
 
 ## Key decisions
 
@@ -38,14 +37,14 @@ The page also has loading (a skeleton), not-found and error states.
 
 ## Extra data I assumed
 
-- **Lumi chat (prototype only):** scripted answers grounded in the scans and notes, to show what explaining a pattern could feel like. A real version would need an LLM with strict no-medical-claims guardrails.
+- **Lumi chat:** scripted answers built from the person's own scans and notes, to show what explaining a pattern could feel like. A real version would need an LLM with strict no-medical-claims guardrails; a test already scans every generated sentence for diagnosis words.
 - **Streaks (prototype only):** worked out from the scan dates and shown after a scan. Nothing extra is collected.
 - **Trip and place photos (prototype only):** illustrative images of Phoenix and of oily skin, used on the pattern orbs.
-- The Next.js report uses only what the API returns.
+- Everything else in the Next.js report comes from what the API returns. Actions with no backend yet (reminders, the 2-week test, adding a skin type) show a short confirmation instead.
 
 ## What I cut / would do next
 
-- **Port the prototype's Lumi chat and post-scan streak into the Next app.** They are designed but not built against the API.
+- **Bring the post-scan streak and Home into the Next app.** They are designed in the prototype but not built against the API.
 - **A side-by-side photo comparison** of the same area over time, with alignment.
 - **Usability tests with real users,** on whether people read the dial correctly without the guide.
 - **Visual regression tests** (Playwright screenshots per person) to go with the unit tests.

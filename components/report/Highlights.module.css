@@ -1,0 +1,86 @@
+.story {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.headline {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 34px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.tail {
+  white-space: nowrap;
+}
+
+.subhead {
+  margin: 8px 0 0;
+  font-size: 15px;
+  line-height: 20px;
+  color: var(--muted);
+}
+
+.top {
+  margin-top: 24px;
+  padding: 18px;
+}
+
+.topPill {
+  margin-bottom: 8px;
+}
+
+.topTitle {
+  margin: 4px 0 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 28px;
+  letter-spacing: -0.01em;
+}
+
+.topTitle[data-labelled] {
+  margin-top: 4px;
+}
+
+.topBody {
+  margin: 6px 0 0;
+  font-size: 15px;
+  line-height: 20px;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.welcome {
+  margin-top: 12px;
+  padding: 20px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--bronze-deep);
+}
+
+.welcomeTitle {
+  margin: 4px 0 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 28px;
+  letter-spacing: -0.01em;
+}
+
+.welcomeCta {
+  margin-top: 14px;
+}

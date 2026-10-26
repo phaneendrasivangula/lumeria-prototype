@@ -30,3 +30,13 @@ describe("display helpers", () => {
     expect(signed(0)).toBe("0");
   });
 });
+
+describe("photos", () => {
+  it("never shows a private scope photo, only the generated placeholder for that scan", async () => {
+    const { photoOf } = await import("./format");
+    const s = (photoUrl: string | null) => ({ photoUrl }) as unknown as Scan;
+    expect(photoOf(s("/scans/noor_scan_01.jpg"))).toBe("/scans/noor_scan_01.svg");
+    expect(photoOf(s("/mock-photos/maya_scan_01.svg"))).toBe("/mock-photos/maya_scan_01.svg");
+    expect(photoOf(s(null))).toBeNull();
+  });
+});

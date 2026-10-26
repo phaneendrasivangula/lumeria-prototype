@@ -1,72 +1,109 @@
-/* timeline */
-.timeline {
-  position: relative;
+.card {
+  margin-top: 12px;
+  padding: 20px;
+}
+
+.list {
   margin: 0;
   padding: 4px 0 2px;
   list-style: none;
 }
 
-.timeline::before {
+.item {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  padding: 0 0 22px 22px;
+}
+
+.item:last-child {
+  padding-bottom: 0;
+}
+
+.item[data-dot="forest"] {
+  --c: var(--forest);
+}
+.item[data-dot="stone"] {
+  --c: var(--stone);
+}
+.item[data-dot="clay"] {
+  --c: var(--clay-soft);
+}
+.item[data-dot="plum"] {
+  --c: var(--plum);
+}
+.item[data-next="forest"] {
+  --n: var(--forest);
+}
+.item[data-next="stone"] {
+  --n: var(--stone);
+}
+.item[data-next="clay"] {
+  --n: var(--clay-soft);
+}
+.item[data-next="plum"] {
+  --n: var(--plum);
+}
+.item[data-next="end"] {
+  --n: transparent;
+}
+
+/* the spine: each step fades from its own colour into the next one's */
+.item::before {
   content: "";
   position: absolute;
   left: 4px;
-  top: 10px;
-  bottom: 0;
+  top: 8px;
+  bottom: -8px;
   width: 2px;
   border-radius: 2px;
-  background: linear-gradient(180deg, var(--sage), var(--amber) 40%, var(--clay) 60%, var(--sage) 90%, rgba(95, 132, 102, 0));
-  opacity: 0.8;
+  background: linear-gradient(180deg, var(--c) 0%, var(--n) 100%);
+  opacity: 0.85;
 }
 
-.event {
-  position: relative;
-  display: grid;
-  grid-template-columns: 76px 1fr;
-  gap: 12px;
-  padding: 0 0 20px 22px;
+.item:last-child::before {
+  bottom: -6px;
+  background: linear-gradient(180deg, var(--c) 0%, transparent 100%);
 }
 
-.event::before {
-  content: "";
+.dot {
   position: absolute;
   left: 0;
-  top: 5px;
+  top: 4px;
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--dot, var(--sage));
-  box-shadow: 0 0 0 3px #fff;
+  background: var(--c);
+  box-shadow:
+    0 0 0 3px var(--page),
+    var(--dot-lift);
 }
 
-.eventDay {
+.date {
+  width: 70px;
+  flex-shrink: 0;
   font-family: var(--serif);
-  font-size: 19px;
-  line-height: 21px;
+  font-size: 20px;
+  line-height: 25px;
+  color: var(--ink);
 }
 
-.eventDetail {
+.what {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  display: block;
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.detail {
   display: block;
   margin-top: 2px;
   font-size: 13px;
+  line-height: 18px;
   color: var(--muted);
-}
-
-.event[data-kind="product-start"] {
-  --dot: var(--sage);
-}
-
-.event[data-kind="product-stop"] {
-  --dot: var(--clay);
-}
-
-.event[data-kind="trip"] {
-  --dot: var(--amber);
-}
-
-.event[data-kind="cycle"] {
-  --dot: var(--plum);
-}
-
-.event[data-kind="note"] {
-  --dot: var(--faint);
 }

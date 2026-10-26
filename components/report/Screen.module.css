@@ -1,0 +1,110 @@
+.screen {
+  position: relative;
+  max-width: var(--column);
+  min-height: 100dvh;
+  margin: 0 auto;
+  background: var(--page);
+  overflow-x: clip;
+  transform-origin: 50% var(--sheet-origin, 0px);
+  transition:
+    transform 0.5s var(--ease),
+    border-radius 0.5s var(--ease),
+    filter 0.5s var(--ease);
+}
+
+/* while a page sheet is up, the report steps back and darkens slightly, as on iOS */
+:global(html[data-sheet="open"]) .screen {
+  transform: translateY(10px) scale(0.93);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.washes {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.washes span {
+  position: absolute;
+  display: block;
+}
+
+.washTop {
+  left: -10%;
+  right: -10%;
+  top: -90px;
+  height: 440px;
+  background: var(--page-wash);
+  filter: blur(28px);
+}
+
+.washPeach {
+  left: 220px;
+  top: -100px;
+  width: 280px;
+  height: 200px;
+  border-radius: 50%;
+  background: var(--peach);
+  opacity: 0.5;
+  filter: blur(55px);
+}
+
+.washMint {
+  left: -150px;
+  top: 1560px;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: var(--mint);
+  opacity: 0.5;
+  filter: blur(90px);
+}
+
+.washRose {
+  left: 190px;
+  top: 2510px;
+  width: 360px;
+  height: 520px;
+  border-radius: 50%;
+  background: var(--rose);
+  opacity: 0.36;
+  filter: blur(100px);
+}
+
+/* the pinned header: clear at the top, frosted glass that fades out downwards once content scrolls under it */
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding: calc(env(safe-area-inset-top, 0px) + 18px) 20px 0;
+  min-height: calc(env(safe-area-inset-top, 0px) + 62px);
+}
+
+.top::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: -28px;
+  z-index: -1;
+  opacity: 0;
+  background: var(--top-glass);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-mask-image: var(--mask-header);
+  mask-image: var(--mask-header);
+  transition: opacity 0.3s ease-out;
+  pointer-events: none;
+}
+
+.top[data-frosted]::before {
+  opacity: 1;
+}
+
+.content {
+  position: relative;
+  padding: 0 var(--gutter) calc(env(safe-area-inset-bottom, 0px) + 120px);
+}

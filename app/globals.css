@@ -1,38 +1,170 @@
-/* Lumeria design tokens. Text colours all meet WCAG AA (4.5:1) on bone, white and sand. */
+/* Lumeria design tokens, taken from the design boards. Every colour in the app lives here; components
+   only reference these variables. Text colours meet WCAG AA (4.5:1) on white and on the warm cards. */
 :root {
+  /* surfaces */
+  --page: #ffffff;
+  --ground: #ece7df; /* around the phone column on wide screens */
   --bone: #fbf9f4;
-  --paper: #ffffff;
-  --sand: #ede6da;
-  --sand-soft: #f6f1e8;
+  --cream: #fbf8f0; /* text on forest */
+  --night: #0e0c0a; /* behind the page while a sheet is up */
+
+  /* ink */
   --ink: #2e2a24;
+  --ink-deep: #2e2620;
   --muted: #6b645b;
   --faint: #706860;
+  --tile-ink: #5f5850;
+  --stone: #a39b90;
+  --stone-soft: #a79f94;
+  --grabber: rgba(60, 60, 67, 0.3);
+
+  /* brand */
   --forest: #2f4a35;
+  --forest-deep: #1f3524;
+  --forest-mid: #2e4d36;
   --forest-text: #3f6b4b;
   --sage: #5f8466;
+  --sage-mist: #d8e7d3;
   --amber: #c9934f;
+  --bronze: #c0913f;
+  --bronze-gold: #b8953f;
   --bronze-deep: #80601f;
   --clay: #a9472c;
-  --hairline: rgba(46, 42, 36, 0.1);
-  --plum: #9a6a7a;
+  --clay-soft: #b8533a;
+  --plum: #b07a86;
+  --plum-deep: #9a6a7a;
+  --sky: #7e9db0;
+  --glow: #fff6e2;
+  --peach: #e8c49a;
+  --mint: #dce5d8;
+  --rose: #ebc3b4;
+  --sand-line: #e8dfce;
+  --track-top: #ffffff;
+  --track-bottom: #ede6da;
+  --ring-wait: #e9e6e1;
+  --photo-ground: #1d1714;
+
+  /* tints */
+  --hairline: rgba(46, 42, 36, 0.09);
+  --hairline-strong: rgba(46, 42, 36, 0.1);
+  --grid: rgba(46, 38, 32, 0.07);
+  --track-tint: rgba(46, 42, 36, 0.05);
+  --wash: rgba(46, 38, 32, 0.06);
+  --bubble: #f1efec;
+  --tint-good: rgba(95, 132, 102, 0.14);
+  --tint-good-strong: rgba(110, 143, 116, 0.2);
+  --tint-good-soft: rgba(110, 143, 116, 0.1);
+  --tint-alert: rgba(169, 71, 44, 0.12);
+  --tint-gold: rgba(184, 149, 63, 0.16);
+  --tint-forest: rgba(31, 53, 36, 0.06);
+  --shade-trip: rgba(184, 83, 58, 0.07);
+  --shade-trip-strong: rgba(184, 83, 58, 0.12);
+  --shade-cycle: rgba(176, 122, 134, 0.14);
+  --shade-watch: rgba(201, 147, 79, 0.1);
+  --shade-good: rgba(95, 132, 102, 0.12);
+  --scrim: rgba(24, 22, 18, 0.42);
+  --shadow-dial: #28180f;
 
   /* how calm a scan was (see lib/bands.ts) */
   --band-calm: var(--sage);
   --band-dipped: var(--amber);
   --band-rough: var(--clay);
+  --band-none: var(--stone);
 
-  --serif: "EB Garamond", Georgia, serif;
-  --sans: var(--font-geist-sans), -apple-system, system-ui, sans-serif;
-
-  --radius-card: 20px;
-  --radius-pill: 1000px;
-  --gutter: 20px;
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
-
+  /* materials, from the boards: glass cards, warm cards, glass chips, the forest button */
   --glass: linear-gradient(180deg, rgba(255, 255, 255, 0.86) 0%, rgba(255, 255, 255, 0.7) 100%);
   --glass-edge: 0 0 0 0.5px rgba(232, 223, 206, 0.9), 0 6px 20px rgba(128, 96, 31, 0.06);
+  --panel: linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.56) 100%);
+  --panel-edge: 0 0 0 0.5px #e8e8e8, -1px 0 0 -1px #d0d0d0, 1px 0 0 -1px #d0d0d0, 0 8px 15px rgba(0, 0, 0, 0.02), 0 12px 32px rgba(40, 24, 16, 0.05);
+  --panel-big: linear-gradient(180deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.62) 100%);
+  --warm: linear-gradient(180deg, rgba(232, 214, 180, 0.55) 0%, rgba(255, 250, 240, 0.85) 100%);
+  --warm-border: rgba(192, 145, 63, 0.35);
+  --warm-edge: 0 8px 24px rgba(128, 96, 31, 0.08);
   --chip: linear-gradient(180deg, rgba(255, 255, 255, 0.86) 0%, rgba(246, 246, 246, 0.74) 100%);
+  --chip-strong: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(246, 246, 246, 0.82) 100%);
   --chip-edge: 1.25px 0 0 -0.75px #d0d0d0, -1.25px 0 0 -0.75px #d0d0d0, 0 0 0 0.5px #e8e8e8, 0 8px 15px rgba(0, 0, 0, 0.02);
+  --chip-lift: 1.25px 0 0 -0.75px #d0d0d0, -1.25px 0 0 -0.75px #d0d0d0, 0 0 0 0.5px #e8e8e8, 0 4px 10px rgba(40, 24, 16, 0.08);
+  --tile-edge: 0 0 0 0.5px #e8e8e8, -1px 0 0 -1px #d0d0d0, 1px 0 0 -1px #d0d0d0, 0 8px 15px rgba(0, 0, 0, 0.02);
+  --primary: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 55%), #2f4a35;
+  --primary-edge:
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.35), inset 0 -1px 0.5px rgba(255, 255, 255, 0.1), inset 1.25px 0 0 -0.75px rgba(255, 255, 255, 0.25),
+    inset -1.25px 0 0 -0.75px rgba(255, 255, 255, 0.25), 0 0 0 0.5px rgba(0, 0, 0, 0.05), 0 8px 15px rgba(0, 0, 0, 0.04);
+  --pill-good: linear-gradient(180deg, rgba(95, 132, 102, 0.24) 0%, rgba(95, 132, 102, 0.12) 100%);
+  --pill-watch: linear-gradient(180deg, rgba(201, 147, 79, 0.26) 0%, rgba(201, 147, 79, 0.12) 100%);
+  --pill-alert: linear-gradient(180deg, rgba(169, 71, 44, 0.18) 0%, rgba(169, 71, 44, 0.08) 100%);
+  --pill-inset: inset 0 1px 0.5px rgba(255, 255, 255, 0.7);
+  --sheet-wash:
+    radial-gradient(70% 30% at 18% 0%, rgba(201, 147, 79, 0.22) 0%, rgba(201, 147, 79, 0) 100%),
+    radial-gradient(60% 28% at 88% 4%, rgba(95, 132, 102, 0.2) 0%, rgba(95, 132, 102, 0) 100%),
+    radial-gradient(50% 24% at 55% 0%, rgba(184, 83, 58, 0.12) 0%, rgba(184, 83, 58, 0) 100%), #ffffff;
+  --sheet-edge: 0 -8px 48px rgba(0, 0, 0, 0.16), 0 0 0 0.5px #dbdbdb;
+  --sheet-fade: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.55) 30%,
+    rgba(255, 255, 255, 0.86) 62%,
+    rgba(255, 255, 255, 0.96) 100%
+  );
+  --page-wash: linear-gradient(180deg, rgba(176, 196, 178, 0.6) 0%, rgba(206, 220, 206, 0.5) 30%, rgba(238, 222, 200, 0.55) 62%, rgba(255, 255, 255, 0) 100%);
+  --skeleton: linear-gradient(90deg, rgba(46, 42, 36, 0.06) 0%, rgba(46, 42, 36, 0.11) 50%, rgba(46, 42, 36, 0.06) 100%);
+  --shimmer: linear-gradient(100deg, rgba(255, 255, 255, 0) 25%, rgba(255, 255, 255, 0.75) 50%, rgba(255, 255, 255, 0) 75%);
+  --orb-lumi:
+    radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.45) 8%, rgba(255, 255, 255, 0) 22%),
+    radial-gradient(circle at 68% 80%, #d8e7d3 0%, rgba(255, 255, 255, 0) 42%), radial-gradient(circle at 45% 42%, #5f8466 0%, #5f8466 38%, #22382a 100%);
+  --orb-shine:
+    radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.35) 8%, rgba(255, 255, 255, 0) 22%),
+    radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.3) 100%);
+  --orb-edge: inset -6px -10px 18px rgba(0, 0, 0, 0.2), inset 4px 6px 12px rgba(255, 255, 255, 0.3), 0 14px 28px rgba(40, 24, 16, 0.14);
+  --nav-glass: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.26) 100%);
+  --nav-edge:
+    inset 1.5px 1.5px 0.5px -0.5px rgba(255, 255, 255, 0.95), inset -1px -1px 0.5px -0.5px rgba(255, 255, 255, 0.75),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55), inset 0 0 14px rgba(255, 255, 255, 0.35), 0 0 0 0.5px rgba(0, 0, 0, 0.07), 0 8px 24px rgba(0, 0, 0, 0.1);
+  --nav-shine:
+    radial-gradient(120% 90% at 18% -10%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 45%),
+    radial-gradient(90% 80% at 90% 120%, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0) 50%);
+  --nav-active: rgba(255, 255, 255, 0.7);
+  --nav-veil: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.35) 70%);
+  --scan-shine:
+    radial-gradient(120% 90% at 18% -10%, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 45%),
+    radial-gradient(90% 80% at 90% 120%, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%);
+  --top-glass: linear-gradient(180deg, rgba(255, 255, 255, 0.84) 0%, rgba(248, 247, 244, 0.7) 70%, rgba(248, 247, 244, 0) 100%);
+  --toast: rgba(46, 38, 32, 0.88);
+
+  /* masks and edges used by single components */
+  --mask-face: linear-gradient(180deg, #000 0%, #000 58%, transparent 96%);
+  --mask-fade-left: linear-gradient(270deg, #000 0%, #000 60%, transparent 100%);
+  --mask-fade-in: linear-gradient(90deg, transparent 0%, #000 38%);
+  --mask-header: linear-gradient(180deg, #000 0%, #000 62%, transparent 100%);
+  --mask-wheel: linear-gradient(90deg, transparent 0, #000 30%, #000 70%, transparent 100%);
+  --mask-photo: linear-gradient(180deg, transparent 0%, #000 14%, #000 70%, transparent 100%);
+  --area-edge: 0 0 0 0.5px rgba(232, 223, 206, 0.9), 0 6px 18px rgba(128, 96, 31, 0.06);
+  --area-white: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.82) 100%);
+  --area-glow-sage: radial-gradient(130% 150% at 100% 100%, rgba(169, 194, 172, 0.3) 0%, rgba(255, 255, 255, 0) 72%);
+  --area-glow-bronze: radial-gradient(130% 150% at 100% 100%, rgba(232, 203, 138, 0.28) 0%, rgba(255, 255, 255, 0) 72%);
+  --area-glow-plum: radial-gradient(130% 150% at 100% 100%, rgba(214, 178, 186, 0.3) 0%, rgba(255, 255, 255, 0) 72%);
+  --area-glow-stone: radial-gradient(130% 150% at 100% 100%, rgba(221, 214, 202, 0.45) 0%, rgba(255, 255, 255, 0) 72%);
+  --disc-edge: 0 0 0 2px rgba(255, 255, 255, 0.9), 0 10px 26px rgba(31, 53, 36, 0.16);
+  --disc-lift: 0 10px 26px rgba(31, 53, 36, 0.16);
+  --on-orb: rgba(255, 255, 255, 0.92);
+  --badge-lift: 0 10px 24px rgba(40, 24, 16, 0.1);
+  --dot-lift: 0 1px 3px rgba(40, 24, 16, 0.12);
+  --nav-active-edge: inset 0 0 0 0.5px rgba(255, 255, 255, 0.9), 0 1px 4px rgba(0, 0, 0, 0.06);
+  --scan-edge:
+    inset 1.5px 1.5px 0.5px -0.5px rgba(255, 255, 255, 0.55), inset -1px -1px 0.5px -0.5px rgba(255, 255, 255, 0.35),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.22), 0 0 0 0.5px rgba(0, 0, 0, 0.05), 0 8px 15px rgba(0, 0, 0, 0.06);
+  --sheet-dim: rgba(10, 8, 6, 0.32);
+
+  --serif: "EB Garamond", Georgia, "Times New Roman", serif;
+  --sans: var(--font-geist-sans), -apple-system, "SF Pro Text", system-ui, sans-serif;
+
+  --radius-card: 20px;
+  --radius-big: 26px;
+  --radius-pill: 1000px;
+  --gutter: 20px;
+  --column: 430px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  color-scheme: light;
 }
 
 *,
@@ -43,31 +175,39 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  background: var(--ground);
+  overflow-x: clip;
+  transition: background-color 0.48s var(--ease);
+}
+
+/* A page sheet is up: the report steps back on a dark ground, like iOS. */
+html[data-sheet="open"] {
+  background: var(--night);
+  overflow: hidden;
 }
 
 body {
   margin: 0;
   min-height: 100dvh;
-  background:
-    radial-gradient(120% 40% at 20% 0%, rgba(201, 147, 79, 0.16) 0%, rgba(201, 147, 79, 0) 70%),
-    radial-gradient(90% 35% at 90% 0%, rgba(95, 132, 102, 0.14) 0%, rgba(95, 132, 102, 0) 70%),
-    var(--bone);
-  background-repeat: no-repeat;
+  background: transparent;
   color: var(--ink);
   font-family: var(--sans);
   font-size: 15px;
   line-height: 20px;
   letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
 }
 
 a {
   color: inherit;
+  text-decoration: none;
 }
 
 button {
   font: inherit;
   color: inherit;
+  letter-spacing: inherit;
 }
 
 :focus-visible {
@@ -91,5 +231,6 @@ button {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

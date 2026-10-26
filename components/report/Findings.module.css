@@ -1,0 +1,109 @@
+.card {
+  margin-top: 10px;
+  padding: 4px 20px 8px;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list[data-variant="area"] {
+  margin: 0 -2px;
+}
+
+.item + .item {
+  border-top: 0.5px solid var(--hairline);
+}
+
+.list[data-variant="area"] .item + .item {
+  border-top: 1px solid var(--sand-line);
+}
+
+.main {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.item:first-child .main {
+  padding-top: 16px;
+}
+
+.list[data-variant="summary"] .item:first-child .main {
+  padding-bottom: 0;
+}
+
+.list[data-variant="area"] .main {
+  align-items: flex-start;
+  padding: 16px 0 0;
+}
+
+.text {
+  display: block;
+  min-width: 0;
+}
+
+.pillRow {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.title {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 27px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.list[data-variant="area"] .title {
+  font-size: 20px;
+  line-height: 25px;
+}
+
+.body {
+  display: block;
+  margin-top: 4px;
+  font-size: 15px;
+  line-height: 21px;
+  color: var(--muted);
+}
+
+.list[data-variant="area"] .body {
+  line-height: 20px;
+}
+
+.chevron {
+  display: flex;
+  color: var(--stone);
+  margin: -2px -5px;
+}
+
+.list[data-variant="area"] .chevron {
+  margin-top: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin: 14px 0 18px;
+}
+
+.list[data-variant="area"] .actions {
+  margin: 10px 0 16px;
+}
+
+.spacer {
+  height: 16px;
+}

@@ -1,0 +1,54 @@
+.orb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  color: var(--on-orb);
+  box-shadow: var(--orb-edge);
+}
+
+.orb[data-size="lg"] {
+  width: 76px;
+  height: 76px;
+}
+
+.orb[data-size="md"] {
+  width: 64px;
+  height: 64px;
+}
+
+.orb[data-size="sm"] {
+  width: 56px;
+  height: 56px;
+}
+
+.orb[data-size="xs"] {
+  width: 18px;
+  height: 18px;
+  box-shadow: none;
+}
+
+.orb[data-kind="product"] {
+  background: var(--orb-shine), radial-gradient(circle at 45% 40%, var(--amber) 0%, var(--bronze-deep) 100%);
+}
+
+.orb[data-kind="trip"] {
+  background: var(--orb-shine), radial-gradient(circle at 45% 40%, var(--sky) 0%, var(--forest-deep) 120%);
+}
+
+.orb[data-kind="sleep"] {
+  background: var(--orb-shine), radial-gradient(circle at 45% 40%, var(--plum) 0%, var(--plum-deep) 100%);
+}
+
+.orb[data-kind="stress"] {
+  background: var(--orb-shine), radial-gradient(circle at 45% 40%, var(--clay-soft) 0%, var(--clay) 100%);
+}
+
+.orb[data-kind="time"] {
+  background: var(--orb-shine), radial-gradient(circle at 45% 40%, var(--stone) 0%, var(--muted) 100%);
+}
+
+.orb[data-kind="area"] {
+  background: var(--orb-lumi);
+}

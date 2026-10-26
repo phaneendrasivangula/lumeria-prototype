@@ -69,9 +69,7 @@ export function tzOf(scan: Scan): string {
 
 /** yyyy-mm-dd in the scan's local time zone. */
 export function localDay(scan: Scan): string {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: tzOf(scan), year: "numeric", month: "2-digit", day: "2-digit" }).format(
-    new Date(scan.takenAt),
-  );
+  return new Intl.DateTimeFormat("en-CA", { timeZone: tzOf(scan), year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(scan.takenAt));
 }
 
 export function fmtDay(isoDay: string, opts: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" }): string {
@@ -108,3 +106,106 @@ export function signed(n: number): string {
 }
 
 export const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : NaN);
+
+/** A score that may be missing in messy data. Anything that isn't a finite number reads as "not measured". */
+export function scoreOf(scan: Scan, key: MetricKey | "overall"): number | null {
+  const v = (scan.scores as unknown as Record<string, unknown> | undefined)?.[key];
+  return typeof v === "number" && Number.isFinite(v) ? v : null;
+}
+
+/** Hour of day (0–24, fractional) in the scan's own time zone. */
+export function localHour(scan: Scan): number {
+  const parts = new Intl.DateTimeFormat("en-US", { timeZone: tzOf(scan), hour: "numeric", minute: "numeric", hourCycle: "h23" }).formatToParts(
+    new Date(scan.takenAt),
+  );
+  const h = Number(parts.find((p) => p.type === "hour")?.value ?? 0);
+  const m = Number(parts.find((p) => p.type === "minute")?.value ?? 0);
+  return h + m / 60;
+}
+
+export function addDays(isoDay: string, n: number): string {
+  return new Date((dayNumber(isoDay) + n) * 864e5).toISOString().slice(0, 10);
+}
+
+export function monthName(isoDay: string): string {
+  return fmtDay(isoDay, { month: "long" });
+}
+
+/** "early August", "mid-August", "late August" */
+export function partOfMonth(isoDay: string): string {
+  const d = Number(isoDay.slice(8, 10));
+  const m = monthName(isoDay);
+  return d <= 10 ? `early ${m}` : d <= 20 ? `mid-${m}` : `late ${m}`;
+}
+
+/** "Sep 23 – Oct 22", or "Oct 3–7" inside one month. */
+export function fmtRange(from: string, to: string, sep = " – "): string {
+  if (from === to) return fmtDay(from);
+  if (from.slice(0, 7) === to.slice(0, 7) && sep === "–") return `${fmtDay(from)}–${Number(to.slice(8, 10))}`;
+  return `${fmtDay(from)}${sep}${fmtDay(to)}`;
+}
+
+const WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+export const numberWord = (n: number) => WORDS[n] ?? String(n);
+
+export const cap = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : s);
+
+/** Joins with commas and a final "and": ["a","b","c"] → "a, b and c". */
+export function listJoin(xs: string[]): string {
+  if (xs.length <= 1) return xs[0] ?? "";
+  return `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`;
+}
+
+export const median = (xs: number[]) => {
+  if (!xs.length) return NaN;
+  const s = [...xs].sort((a, b) => a - b);
+  const m = Math.floor(s.length / 2);
+  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+};
+
+/** How each metric reads when it moves: up is always better. */
+export const METRIC_MOVE: Record<MetricKey, { up: string; down: string; adj: string; best: string; worse: string; short: string; tile: string }> = {
+  redness: { up: "calmer", down: "redder", adj: "Calmer", best: "calmest", worse: "red", short: "redness", tile: "Redness" },
+  hydration: { up: "more hydrated", down: "drier", adj: "More hydrated", best: "most hydrated", worse: "dry", short: "hydration", tile: "Hydration" },
+  evenness: { up: "smoother", down: "rougher", adj: "Smoother", best: "smoothest", worse: "rough", short: "texture", tile: "Texture" },
+  pigmentation: { up: "more even", down: "less even", adj: "More even", best: "most even", worse: "uneven", short: "tone", tile: "Tone" },
+  oiliness: { up: "less shiny", down: "shinier", adj: "Less shiny", best: "least shiny", worse: "shiny", short: "oil balance", tile: "Oil" },
+};
+
+/** "Calm"-style one-word reading of a metric that held up, for headlines. */
+export const METRIC_STEADY: Record<MetricKey, string> = {
+  redness: "Calm",
+  hydration: "Hydrated",
+  evenness: "Smooth",
+  pigmentation: "Even",
+  oiliness: "Balanced",
+};
+
+/** Gentle one-off words for a single scan, when there is no usual to compare with yet (the first-scan report). */
+export function firstScanWord(key: MetricKey, score: number | null): string {
+  if (score == null) return "not measured";
+  const tier = score >= 70 ? 0 : score >= 60 ? 1 : score >= 50 ? 2 : 3;
+  const words: Record<MetricKey, [string, string, string, string]> = {
+    hydration: ["well hydrated", "well hydrated", "a touch dry", "dry today"],
+    redness: ["calm", "mostly calm", "a little red", "red today"],
+    pigmentation: ["even", "fairly even", "a little uneven", "uneven today"],
+    evenness: ["smooth", "fairly smooth", "a little uneven", "rough today"],
+    oiliness: ["balanced", "a little shiny", "shiny", "shiny today"],
+  };
+  return words[key][tier];
+}
+
+/** Bar colour for a single score: forest when healthy, bronze in the middle, clay when low. */
+export function scoreTone(score: number): "good" | "watch" | "alert" {
+  return score >= 60 ? "good" : score >= 50 ? "watch" : "alert";
+}
+
+/**
+ * The photo to show for a scan. Real scope photos (public/scans/*.jpg) are private and never shown by this UI: if the
+ * API hands one back, we show that scan's generated placeholder (same name, .svg) instead.
+ */
+export function photoOf(scan: Scan): string | null {
+  const url = scan.photoUrl;
+  if (!url) return null;
+  return /^\/scans\/[^/]+\.jpe?g$/i.test(url) ? url.replace(/(-polarized|-uva)?\.jpe?g$/i, ".svg") : url;
+}

@@ -1,0 +1,65 @@
+.chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.stop[data-band="calm"] {
+  stop-color: var(--band-calm);
+}
+
+.stop[data-band="dipped"] {
+  stop-color: var(--band-dipped);
+}
+
+.stop[data-band="rough"] {
+  stop-color: var(--clay-soft);
+}
+
+.window[data-tone="watch"] {
+  fill: var(--shade-watch);
+}
+
+.window[data-tone="alert"] {
+  fill: var(--shade-trip-strong);
+}
+
+.window[data-tone="good"] {
+  fill: var(--shade-good);
+}
+
+.line {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-opacity: 0.6;
+}
+
+.single {
+  fill: var(--sage);
+}
+
+.tick {
+  stroke: var(--ink);
+  stroke-opacity: 0.35;
+  stroke-width: 1;
+}
+
+.focus {
+  fill: var(--page);
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+.focusLabel {
+  font-family: var(--sans);
+  font-size: 13px;
+  fill: var(--ink);
+}
+
+.axis {
+  font-family: var(--sans);
+  font-size: 12px;
+  fill: var(--faint);
+}

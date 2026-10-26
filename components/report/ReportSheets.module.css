@@ -1,0 +1,27 @@
+.areas {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  border-bottom: 0.5px solid var(--hairline);
+  color: var(--ink);
+}
+
+.area svg:last-child {
+  color: var(--stone);
+}
+
+.area[aria-current="page"] .areaName {
+  font-weight: 600;
+}
+
+.areaName {
+  flex: 1;
+  font-size: 16px;
+}
